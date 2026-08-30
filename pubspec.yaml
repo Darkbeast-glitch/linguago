@@ -40,11 +40,16 @@ dependencies:
   flutter_riverpod: ^2.6.1
 
   # Immutable models + JSON serialization for Language / TranslationResult / AppSettings.
-  freezed_annotation: ^2.4.4
+  freezed_annotation: ^3.0.0
   json_annotation: ^4.9.0
   flutter_gemma: ^1.6.5
   flutter_gemma_litertlm: ^1.5.3
   connectivity_plus: ^7.3.1
+  record: ^7.1.1
+  path_provider: ^2.1.6
+  background_downloader: ^9.5.9
+  flutter_tts: ^4.2.5
+  shared_preferences: ^2.5.5
 
 dev_dependencies:
   flutter_test:
@@ -57,8 +62,8 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
 
-  build_runner: ^2.4.13
-  freezed: ^2.5.7
+  build_runner: 2.5.4
+  freezed: ^3.0.0
   json_serializable: ^6.8.0
 
 # For information on the generic Dart part of this file, see the
@@ -101,3 +106,15 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+# win32 6.4.0 uses Dart 3.12 "dot shorthand" syntax (`Data1 = .parse(...)`),
+# which the analyzer bundled with freezed 2.x cannot parse — it throws
+# "Missing implementation of visitDotShorthandInvocation" and codegen dies.
+# Upgrading freezed is blocked: freezed 4 needs Dart >=3.13, and the Flutter
+# SDK pins meta 1.18.0 which caps the analyzer below what build_runner 2.15+
+# wants. win32 is a Windows-only transitive dependency of path_provider /
+# connectivity_plus / device_info_plus, and this app targets Android and iOS,
+# so holding it back costs us nothing. Remove once the toolchain moves on.
+dependency_overrides:
+  win32: ^5.5.4
+  win32_registry: ^1.1.5

@@ -43,3 +43,12 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# On-device model weights (~2.6 GB). Downloaded at runtime or sideloaded —
+# never committed. GitHub rejects files over 100 MB, and a blob this size
+# would be permanent in the repo's history even after deletion.
+*.litertlm
+*.task
+
+# Local backups created while editing config
+*.bak

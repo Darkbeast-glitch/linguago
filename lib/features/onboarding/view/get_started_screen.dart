@@ -1,21 +1,25 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app/app_router.dart';
+import '../../../core/storage/app_preferences.dart';
 
 /// First-launch screen with staggered entrance animations:
 ///  • Headline fades + slides up
 ///  • Subtitle fades in with a slight delay
 ///  • Flags image drifts up from the bottom
 ///  • FAB pulses with a continuous scale animation
-class GetStartedScreen extends StatefulWidget {
+class GetStartedScreen extends ConsumerStatefulWidget {
   const GetStartedScreen({super.key});
 
   @override
-  State<GetStartedScreen> createState() => _GetStartedScreenState();
+  ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends State<GetStartedScreen>
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
     with TickerProviderStateMixin {
   // Staggered entrance
   late final AnimationController _entranceCtrl;
@@ -103,6 +107,17 @@ class _GetStartedScreenState extends State<GetStartedScreen>
     super.dispose();
   }
 
+  /// Records that the introduction has been seen, then moves on.
+  ///
+  /// Navigation isn't gated on the write completing — this screen is a one-off
+  /// welcome, and making someone wait on a disk write to leave it would be a
+  /// worse trade than the rare case of the flag not landing before a crash.
+  Future<void> _continue() async {
+    final navigator = Navigator.of(context);
+    unawaited(ref.read(appPreferencesProvider).setHasSeenGetStarted(true));
+    navigator.pushReplacementNamed(AppRoutes.modelSetup);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -122,13 +137,15 @@ class _GetStartedScreenState extends State<GetStartedScreen>
                     opacity: _headlineFade,
                     child: SlideTransition(
                       position: _headlineSlide,
-                      child: Text(
-                        'Break Free\nfrom Language\nBarriers',
-                        style: GoogleFonts.plusJakartaSans(
-                          color: Colors.white,
-                          fontSize: 34,
-                          fontWeight: FontWeight.bold,
-                          height: 1.15,
+                      child: Text.rich(
+                        TextSpan(
+                          text: 'Break Free\nfrom Language\nBarriers',
+                          style: GoogleFonts.plusJakartaSans(
+                            color: Colors.white,
+                            fontSize: 34,
+                            fontWeight: FontWeight.bold,
+                            height: 1.15,
+                          ),
                         ),
                       ),
                     ),
@@ -153,6 +170,9 @@ class _GetStartedScreenState extends State<GetStartedScreen>
             const Spacer(),
 
             // ── Flags image ────────────────────────────────────────────
+            // No Flexible wrapper — let the image size to its natural height
+            // at full screen width (fitWidth). The two Spacers flex to fill
+            // whatever vertical space remains above and below.
             FadeTransition(
               opacity: _flagsFade,
               child: SlideTransition(
@@ -177,9 +197,9 @@ class _GetStartedScreenState extends State<GetStartedScreen>
                     backgroundColor: Colors.white,
                     foregroundColor: Colors.black,
                     shape: const CircleBorder(),
-                    onPressed: () => Navigator.of(
-                      context,
-                    ).pushReplacementNamed(AppRoutes.home),
+                    // Routes through model setup, which forwards straight on
+                    // to home when the model is already installed.
+                    onPressed: _continue,
                     child: const Icon(Icons.arrow_forward),
                   ),
                 ),

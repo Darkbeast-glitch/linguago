@@ -10,7 +10,7 @@ enum TranslationStatus { idle, recording, processing, success, error }
 /// UI state for the translator screen (PRD §16). Not JSON-serialized — this
 /// is transient in-memory state, not a wire model.
 @freezed
-class TranslationState with _$TranslationState {
+abstract class TranslationState with _$TranslationState {
   const factory TranslationState({
     @Default(TranslationStatus.idle) TranslationStatus status,
     required Language sourceLanguage,
@@ -20,10 +20,16 @@ class TranslationState with _$TranslationState {
     @Default(false) bool isSpeaking,
     @Default(false) bool isModelReady,
     String? errorMessage,
+
+    /// True when [errorMessage] describes a missing capability (no offline
+    /// voice for this language) rather than a failure. The translation is
+    /// still valid and stays on screen, so this shouldn't be dressed up as an
+    /// error — PRD §22 asks for an explanation, not an alarm.
+    @Default(false) bool errorIsCapabilityGap,
   }) = _TranslationState;
 
   factory TranslationState.initial() => const TranslationState(
-        sourceLanguage: SupportedLanguages.english,
-        targetLanguage: SupportedLanguages.french,
-      );
+    sourceLanguage: SupportedLanguages.english,
+    targetLanguage: SupportedLanguages.french,
+  );
 }

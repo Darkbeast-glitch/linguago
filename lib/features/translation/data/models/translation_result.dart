@@ -5,7 +5,7 @@ part 'translation_result.g.dart';
 
 /// The structured output of one offline translation pass (PRD §12).
 @freezed
-class TranslationResult with _$TranslationResult {
+abstract class TranslationResult with _$TranslationResult {
   const factory TranslationResult({
     required String sourceLanguage,
     required String targetLanguage,

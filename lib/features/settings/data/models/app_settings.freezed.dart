@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,233 +9,275 @@ part of 'app_settings.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-  'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models',
-);
-
-AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) {
-  return _AppSettings.fromJson(json);
-}
 
 /// @nodoc
 mixin _$AppSettings {
-  String get preferredSourceLanguageCode => throw _privateConstructorUsedError;
-  String get preferredTargetLanguageCode => throw _privateConstructorUsedError;
-  bool get autoPlayTranslatedSpeech => throw _privateConstructorUsedError;
+
+ String get preferredSourceLanguageCode; String get preferredTargetLanguageCode; bool get autoPlayTranslatedSpeech;
+/// Create a copy of AppSettings
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AppSettingsCopyWith<AppSettings> get copyWith => _$AppSettingsCopyWithImpl<AppSettings>(this as AppSettings, _$identity);
 
   /// Serializes this AppSettings to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of AppSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $AppSettingsCopyWith<AppSettings> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.preferredSourceLanguageCode, preferredSourceLanguageCode) || other.preferredSourceLanguageCode == preferredSourceLanguageCode)&&(identical(other.preferredTargetLanguageCode, preferredTargetLanguageCode) || other.preferredTargetLanguageCode == preferredTargetLanguageCode)&&(identical(other.autoPlayTranslatedSpeech, autoPlayTranslatedSpeech) || other.autoPlayTranslatedSpeech == autoPlayTranslatedSpeech));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,preferredSourceLanguageCode,preferredTargetLanguageCode,autoPlayTranslatedSpeech);
+
+@override
+String toString() {
+  return 'AppSettings(preferredSourceLanguageCode: $preferredSourceLanguageCode, preferredTargetLanguageCode: $preferredTargetLanguageCode, autoPlayTranslatedSpeech: $autoPlayTranslatedSpeech)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AppSettingsCopyWith<$Res> {
-  factory $AppSettingsCopyWith(
-    AppSettings value,
-    $Res Function(AppSettings) then,
-  ) = _$AppSettingsCopyWithImpl<$Res, AppSettings>;
-  @useResult
-  $Res call({
-    String preferredSourceLanguageCode,
-    String preferredTargetLanguageCode,
-    bool autoPlayTranslatedSpeech,
-  });
-}
+abstract mixin class $AppSettingsCopyWith<$Res>  {
+  factory $AppSettingsCopyWith(AppSettings value, $Res Function(AppSettings) _then) = _$AppSettingsCopyWithImpl;
+@useResult
+$Res call({
+ String preferredSourceLanguageCode, String preferredTargetLanguageCode, bool autoPlayTranslatedSpeech
+});
 
+
+
+
+}
 /// @nodoc
-class _$AppSettingsCopyWithImpl<$Res, $Val extends AppSettings>
+class _$AppSettingsCopyWithImpl<$Res>
     implements $AppSettingsCopyWith<$Res> {
-  _$AppSettingsCopyWithImpl(this._value, this._then);
+  _$AppSettingsCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AppSettings _self;
+  final $Res Function(AppSettings) _then;
 
-  /// Create a copy of AppSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? preferredSourceLanguageCode = null,
-    Object? preferredTargetLanguageCode = null,
-    Object? autoPlayTranslatedSpeech = null,
-  }) {
-    return _then(
-      _value.copyWith(
-            preferredSourceLanguageCode: null == preferredSourceLanguageCode
-                ? _value.preferredSourceLanguageCode
-                : preferredSourceLanguageCode // ignore: cast_nullable_to_non_nullable
-                      as String,
-            preferredTargetLanguageCode: null == preferredTargetLanguageCode
-                ? _value.preferredTargetLanguageCode
-                : preferredTargetLanguageCode // ignore: cast_nullable_to_non_nullable
-                      as String,
-            autoPlayTranslatedSpeech: null == autoPlayTranslatedSpeech
-                ? _value.autoPlayTranslatedSpeech
-                : autoPlayTranslatedSpeech // ignore: cast_nullable_to_non_nullable
-                      as bool,
-          )
-          as $Val,
-    );
-  }
+/// Create a copy of AppSettings
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? preferredSourceLanguageCode = null,Object? preferredTargetLanguageCode = null,Object? autoPlayTranslatedSpeech = null,}) {
+  return _then(_self.copyWith(
+preferredSourceLanguageCode: null == preferredSourceLanguageCode ? _self.preferredSourceLanguageCode : preferredSourceLanguageCode // ignore: cast_nullable_to_non_nullable
+as String,preferredTargetLanguageCode: null == preferredTargetLanguageCode ? _self.preferredTargetLanguageCode : preferredTargetLanguageCode // ignore: cast_nullable_to_non_nullable
+as String,autoPlayTranslatedSpeech: null == autoPlayTranslatedSpeech ? _self.autoPlayTranslatedSpeech : autoPlayTranslatedSpeech // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
 }
 
-/// @nodoc
-abstract class _$$AppSettingsImplCopyWith<$Res>
-    implements $AppSettingsCopyWith<$Res> {
-  factory _$$AppSettingsImplCopyWith(
-    _$AppSettingsImpl value,
-    $Res Function(_$AppSettingsImpl) then,
-  ) = __$$AppSettingsImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({
-    String preferredSourceLanguageCode,
-    String preferredTargetLanguageCode,
-    bool autoPlayTranslatedSpeech,
-  });
 }
 
-/// @nodoc
-class __$$AppSettingsImplCopyWithImpl<$Res>
-    extends _$AppSettingsCopyWithImpl<$Res, _$AppSettingsImpl>
-    implements _$$AppSettingsImplCopyWith<$Res> {
-  __$$AppSettingsImplCopyWithImpl(
-    _$AppSettingsImpl _value,
-    $Res Function(_$AppSettingsImpl) _then,
-  ) : super(_value, _then);
 
-  /// Create a copy of AppSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? preferredSourceLanguageCode = null,
-    Object? preferredTargetLanguageCode = null,
-    Object? autoPlayTranslatedSpeech = null,
-  }) {
-    return _then(
-      _$AppSettingsImpl(
-        preferredSourceLanguageCode: null == preferredSourceLanguageCode
-            ? _value.preferredSourceLanguageCode
-            : preferredSourceLanguageCode // ignore: cast_nullable_to_non_nullable
-                  as String,
-        preferredTargetLanguageCode: null == preferredTargetLanguageCode
-            ? _value.preferredTargetLanguageCode
-            : preferredTargetLanguageCode // ignore: cast_nullable_to_non_nullable
-                  as String,
-        autoPlayTranslatedSpeech: null == autoPlayTranslatedSpeech
-            ? _value.autoPlayTranslatedSpeech
-            : autoPlayTranslatedSpeech // ignore: cast_nullable_to_non_nullable
-                  as bool,
-      ),
-    );
-  }
+/// Adds pattern-matching-related methods to [AppSettings].
+extension AppSettingsPatterns on AppSettings {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AppSettings value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AppSettings() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AppSettings value)  $default,){
+final _that = this;
+switch (_that) {
+case _AppSettings():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AppSettings value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AppSettings() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AppSettings() when $default != null:
+return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech)  $default,) {final _that = this;
+switch (_that) {
+case _AppSettings():
+return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech)?  $default,) {final _that = this;
+switch (_that) {
+case _AppSettings() when $default != null:
+return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech);case _:
+  return null;
+
+}
+}
+
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$AppSettingsImpl implements _AppSettings {
-  const _$AppSettingsImpl({
-    this.preferredSourceLanguageCode = 'en',
-    this.preferredTargetLanguageCode = 'fr',
-    this.autoPlayTranslatedSpeech = true,
-  });
 
-  factory _$AppSettingsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AppSettingsImplFromJson(json);
+class _AppSettings implements AppSettings {
+  const _AppSettings({this.preferredSourceLanguageCode = 'en', this.preferredTargetLanguageCode = 'fr', this.autoPlayTranslatedSpeech = true});
+  factory _AppSettings.fromJson(Map<String, dynamic> json) => _$AppSettingsFromJson(json);
 
-  @override
-  @JsonKey()
-  final String preferredSourceLanguageCode;
-  @override
-  @JsonKey()
-  final String preferredTargetLanguageCode;
-  @override
-  @JsonKey()
-  final bool autoPlayTranslatedSpeech;
+@override@JsonKey() final  String preferredSourceLanguageCode;
+@override@JsonKey() final  String preferredTargetLanguageCode;
+@override@JsonKey() final  bool autoPlayTranslatedSpeech;
 
-  @override
-  String toString() {
-    return 'AppSettings(preferredSourceLanguageCode: $preferredSourceLanguageCode, preferredTargetLanguageCode: $preferredTargetLanguageCode, autoPlayTranslatedSpeech: $autoPlayTranslatedSpeech)';
-  }
+/// Create a copy of AppSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AppSettingsCopyWith<_AppSettings> get copyWith => __$AppSettingsCopyWithImpl<_AppSettings>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AppSettingsImpl &&
-            (identical(
-                  other.preferredSourceLanguageCode,
-                  preferredSourceLanguageCode,
-                ) ||
-                other.preferredSourceLanguageCode ==
-                    preferredSourceLanguageCode) &&
-            (identical(
-                  other.preferredTargetLanguageCode,
-                  preferredTargetLanguageCode,
-                ) ||
-                other.preferredTargetLanguageCode ==
-                    preferredTargetLanguageCode) &&
-            (identical(
-                  other.autoPlayTranslatedSpeech,
-                  autoPlayTranslatedSpeech,
-                ) ||
-                other.autoPlayTranslatedSpeech == autoPlayTranslatedSpeech));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(
-    runtimeType,
-    preferredSourceLanguageCode,
-    preferredTargetLanguageCode,
-    autoPlayTranslatedSpeech,
-  );
-
-  /// Create a copy of AppSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AppSettingsImplCopyWith<_$AppSettingsImpl> get copyWith =>
-      __$$AppSettingsImplCopyWithImpl<_$AppSettingsImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AppSettingsImplToJson(this);
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$AppSettingsToJson(this, );
 }
 
-abstract class _AppSettings implements AppSettings {
-  const factory _AppSettings({
-    final String preferredSourceLanguageCode,
-    final String preferredTargetLanguageCode,
-    final bool autoPlayTranslatedSpeech,
-  }) = _$AppSettingsImpl;
-
-  factory _AppSettings.fromJson(Map<String, dynamic> json) =
-      _$AppSettingsImpl.fromJson;
-
-  @override
-  String get preferredSourceLanguageCode;
-  @override
-  String get preferredTargetLanguageCode;
-  @override
-  bool get autoPlayTranslatedSpeech;
-
-  /// Create a copy of AppSettings
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AppSettingsImplCopyWith<_$AppSettingsImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.preferredSourceLanguageCode, preferredSourceLanguageCode) || other.preferredSourceLanguageCode == preferredSourceLanguageCode)&&(identical(other.preferredTargetLanguageCode, preferredTargetLanguageCode) || other.preferredTargetLanguageCode == preferredTargetLanguageCode)&&(identical(other.autoPlayTranslatedSpeech, autoPlayTranslatedSpeech) || other.autoPlayTranslatedSpeech == autoPlayTranslatedSpeech));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,preferredSourceLanguageCode,preferredTargetLanguageCode,autoPlayTranslatedSpeech);
+
+@override
+String toString() {
+  return 'AppSettings(preferredSourceLanguageCode: $preferredSourceLanguageCode, preferredTargetLanguageCode: $preferredTargetLanguageCode, autoPlayTranslatedSpeech: $autoPlayTranslatedSpeech)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AppSettingsCopyWith<$Res> implements $AppSettingsCopyWith<$Res> {
+  factory _$AppSettingsCopyWith(_AppSettings value, $Res Function(_AppSettings) _then) = __$AppSettingsCopyWithImpl;
+@override @useResult
+$Res call({
+ String preferredSourceLanguageCode, String preferredTargetLanguageCode, bool autoPlayTranslatedSpeech
+});
+
+
+
+
+}
+/// @nodoc
+class __$AppSettingsCopyWithImpl<$Res>
+    implements _$AppSettingsCopyWith<$Res> {
+  __$AppSettingsCopyWithImpl(this._self, this._then);
+
+  final _AppSettings _self;
+  final $Res Function(_AppSettings) _then;
+
+/// Create a copy of AppSettings
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? preferredSourceLanguageCode = null,Object? preferredTargetLanguageCode = null,Object? autoPlayTranslatedSpeech = null,}) {
+  return _then(_AppSettings(
+preferredSourceLanguageCode: null == preferredSourceLanguageCode ? _self.preferredSourceLanguageCode : preferredSourceLanguageCode // ignore: cast_nullable_to_non_nullable
+as String,preferredTargetLanguageCode: null == preferredTargetLanguageCode ? _self.preferredTargetLanguageCode : preferredTargetLanguageCode // ignore: cast_nullable_to_non_nullable
+as String,autoPlayTranslatedSpeech: null == autoPlayTranslatedSpeech ? _self.autoPlayTranslatedSpeech : autoPlayTranslatedSpeech // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+// dart format on

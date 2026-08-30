@@ -6,17 +6,15 @@ part of 'app_settings.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$AppSettingsImpl _$$AppSettingsImplFromJson(Map<String, dynamic> json) =>
-    _$AppSettingsImpl(
-      preferredSourceLanguageCode:
-          json['preferredSourceLanguageCode'] as String? ?? 'en',
-      preferredTargetLanguageCode:
-          json['preferredTargetLanguageCode'] as String? ?? 'fr',
-      autoPlayTranslatedSpeech:
-          json['autoPlayTranslatedSpeech'] as bool? ?? true,
-    );
+_AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => _AppSettings(
+  preferredSourceLanguageCode:
+      json['preferredSourceLanguageCode'] as String? ?? 'en',
+  preferredTargetLanguageCode:
+      json['preferredTargetLanguageCode'] as String? ?? 'fr',
+  autoPlayTranslatedSpeech: json['autoPlayTranslatedSpeech'] as bool? ?? true,
+);
 
-Map<String, dynamic> _$$AppSettingsImplToJson(_$AppSettingsImpl instance) =>
+Map<String, dynamic> _$AppSettingsToJson(_AppSettings instance) =>
     <String, dynamic>{
       'preferredSourceLanguageCode': instance.preferredSourceLanguageCode,
       'preferredTargetLanguageCode': instance.preferredTargetLanguageCode,

@@ -43,6 +43,22 @@ class FakeTranslationRepositoryImpl implements TranslationRepository {
   }
 
   @override
+  Future<TranslationResult> translateText({
+    required String text,
+    required Language source,
+    required Language target,
+  }) async {
+    await Future<void>.delayed(const Duration(milliseconds: 600));
+    return TranslationResult(
+      sourceLanguage: source.code,
+      targetLanguage: target.code,
+      transcription: text,
+      translation: _sampleFor(source.code, target.code).$2,
+      createdAt: DateTime.now(),
+    );
+  }
+
+  @override
   Future<void> speak(String text, Language language) async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
   }

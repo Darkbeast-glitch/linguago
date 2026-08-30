@@ -1,0 +1,50 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+/// Overridden in `main()` with the instance loaded before the app starts.
+///
+/// Resolving it up front rather than asynchronously inside the widget tree is
+/// what lets the first frame land on the right screen — a returning user never
+/// sees Get Started flash by before being redirected away from it.
+final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
+  throw StateError(
+    'sharedPreferencesProvider must be overridden in main() with the '
+    'instance from SharedPreferences.getInstance().',
+  );
+});
+
+final appPreferencesProvider = Provider<AppPreferences>((ref) {
+  return AppPreferences(ref.watch(sharedPreferencesProvider));
+});
+
+/// Small, local, on-device key/value storage. Nothing here leaves the phone,
+/// and nothing here is speech content (PRD §23).
+class AppPreferences {
+  AppPreferences(this._prefs);
+
+  final SharedPreferences _prefs;
+
+  static const _kHasSeenGetStarted = 'has_seen_get_started';
+  static const _kAutoPlaySpeech = 'auto_play_translated_speech';
+  static const _kSourceLanguage = 'preferred_source_language';
+  static const _kTargetLanguage = 'preferred_target_language';
+
+  bool get hasSeenGetStarted => _prefs.getBool(_kHasSeenGetStarted) ?? false;
+
+  Future<void> setHasSeenGetStarted(bool value) =>
+      _prefs.setBool(_kHasSeenGetStarted, value);
+
+  bool get autoPlayTranslatedSpeech => _prefs.getBool(_kAutoPlaySpeech) ?? true;
+
+  Future<void> setAutoPlayTranslatedSpeech(bool value) =>
+      _prefs.setBool(_kAutoPlaySpeech, value);
+
+  String get sourceLanguageCode => _prefs.getString(_kSourceLanguage) ?? 'en';
+
+  String get targetLanguageCode => _prefs.getString(_kTargetLanguage) ?? 'fr';
+
+  Future<void> setLanguagePair({required String source, required String target}) async {
+    await _prefs.setString(_kSourceLanguage, source);
+    await _prefs.setString(_kTargetLanguage, target);
+  }
+}

@@ -21,6 +21,13 @@ abstract class TranslationRepository {
     required Language target,
   });
 
+  /// Translates text the user typed or corrected, with no recording involved.
+  Future<TranslationResult> translateText({
+    required String text,
+    required Language source,
+    required Language target,
+  });
+
   /// Speaks [text] using an offline TTS voice for [language].
   Future<void> speak(String text, Language language);
 

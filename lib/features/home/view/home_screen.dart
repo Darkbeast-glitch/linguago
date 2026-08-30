@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app/app_router.dart';
+import 'home_menu_sheet.dart';
+import 'language_search_sheet.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: const Color(0xFFEEEEEE),
       body: SafeArea(
@@ -18,8 +21,14 @@ class HomeScreen extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _CircleIconButton(icon: Icons.grid_view_rounded, onTap: () {}),
-                _CircleIconButton(icon: Icons.search_rounded, onTap: () {}),
+                _CircleIconButton(
+                  icon: Icons.grid_view_rounded,
+                  onTap: () => HomeMenuSheet.show(context),
+                ),
+                _CircleIconButton(
+                  icon: Icons.search_rounded,
+                  onTap: () => LanguageSearchSheet.show(context),
+                ),
               ],
             ),
 
@@ -77,12 +86,13 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Yellow card
+                  // Grayed out Expert Class card
                   Expanded(
                     child: _FeatureCard(
-                      color: const Color(0xFFFFCC00),
+                      color: const Color(0xFFE0E2E7),
                       label: 'The\nExpert\nClass',
-                      labelColor: Colors.black,
+                      labelColor: const Color(0xFF9CA3AF),
+                      isDisabled: true,
                       onTap: () {},
                     ),
                   ),
@@ -169,22 +179,24 @@ class _FeatureCard extends StatelessWidget {
     required this.label,
     required this.labelColor,
     required this.onTap,
+    this.isDisabled = false,
   });
 
   final Color color;
   final String label;
   final Color labelColor;
   final VoidCallback onTap;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: isDisabled ? null : onTap,
       child: Container(
         width: MediaQuery.sizeOf(context).width * 0.45,
         height: MediaQuery.sizeOf(context).width * 0.50,
         decoration: BoxDecoration(
-          color: color,
+          color: isDisabled ? const Color(0xFFE5E7EB) : color,
           borderRadius: BorderRadius.circular(24),
         ),
         child: Stack(
@@ -204,7 +216,7 @@ class _FeatureCard extends StatelessWidget {
                 ),
               ),
             ),
-            // Arrow button — bottom-right corner
+            // Arrow / Lock button — bottom-right corner
             Positioned(
               bottom: 14,
               right: 14,
@@ -212,15 +224,22 @@ class _FeatureCard extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: Colors.black,
+                  color: isDisabled ? const Color(0xFFD1D5DB) : Colors.black,
                   shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
+                  border: Border.all(
+                    color: isDisabled ? const Color(0xFFE5E7EB) : Colors.white,
+                    width: 2,
+                  ),
                 ),
                 child: Icon(
-                  Icons.arrow_outward_rounded,
-                  color: labelColor == Colors.white
-                      ? Colors.white
-                      : Colors.yellow,
+                  isDisabled
+                      ? Icons.lock_outline_rounded
+                      : Icons.arrow_outward_rounded,
+                  color: isDisabled
+                      ? const Color(0xFF6B7280)
+                      : (labelColor == Colors.white
+                          ? Colors.white
+                          : Colors.yellow),
                   size: 20,
                 ),
               ),
@@ -387,12 +406,16 @@ class _RecommendedCard extends StatelessWidget {
               ),
             ),
             const SizedBox(width: 12),
-            Text(
-              label,
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-                color: Colors.black87,
+            // Expanded so a long language pair (or a large accessibility text
+            // scale) wraps instead of overflowing the card.
+            Expanded(
+              child: Text(
+                label,
+                style: GoogleFonts.plusJakartaSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
               ),
             ),
           ],
