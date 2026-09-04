@@ -22,4 +22,10 @@ workflows:
     artifacts:
       - build/app/outputs/flutter-apk/app-release.apk
       - build/**/outputs/**/*.apk
-    
+    publishing:
+      firebase:
+        firebase_service_account: $FIREBASE_SERVICE_ACCOUNT
+        android:
+          app_id: 1:712467823098:android:aabcf03d7516ee50df8c43
+          groups:
+            - qa-team
