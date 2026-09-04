@@ -52,3 +52,10 @@ app.*.map.json
 
 # Local backups created while editing config
 *.bak
+
+# Android release signing — passwords and the private key itself.
+# Losing the keystore means you can never update an installed app; leaking it
+# means someone else can publish as you.
+android/key.properties
+*.jks
+*.keystore

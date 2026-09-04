@@ -262,15 +262,11 @@ class _TranslateCard extends StatelessWidget {
 /// Custom clipper for the top source card with rounded corners, sloped bottom,
 /// and a smooth concave notch at the center for the swap button.
 class _TopCardClipper extends CustomClipper<Path> {
-  const _TopCardClipper({
-    this.cornerRadius = 28.0,
-    this.notchRadius = 28.0,
-    this.slope = 16.0,
-  });
+  const _TopCardClipper();
 
-  final double cornerRadius;
-  final double notchRadius;
-  final double slope;
+  static const double cornerRadius = 28.0;
+  static const double notchRadius = 28.0;
+  static const double slope = 16.0;
 
   @override
   Path getClip(Size size) {
@@ -330,15 +326,11 @@ class _TopCardClipper extends CustomClipper<Path> {
 /// Custom clipper for the bottom target card with rounded corners, sloped top,
 /// and a smooth convex notch at the center for the swap button.
 class _BottomCardClipper extends CustomClipper<Path> {
-  const _BottomCardClipper({
-    this.cornerRadius = 28.0,
-    this.notchRadius = 28.0,
-    this.slope = 16.0,
-  });
+  const _BottomCardClipper();
 
-  final double cornerRadius;
-  final double notchRadius;
-  final double slope;
+  static const double cornerRadius = 28.0;
+  static const double notchRadius = 28.0;
+  static const double slope = 16.0;
 
   @override
   Path getClip(Size size) {
@@ -407,8 +399,9 @@ class _LanguageHalf extends StatelessWidget {
     this.onSubmitted,
     this.hintText,
     this.padding = const EdgeInsets.all(20),
-    this.minHeight = 210.0,
   });
+
+  static const double minHeight = 210.0;
 
   final Language language;
   final ValueChanged<Language> onLanguageChanged;
@@ -416,7 +409,6 @@ class _LanguageHalf extends StatelessWidget {
   final List<Widget> leadingActions;
   final List<Widget> trailingActions;
   final EdgeInsetsGeometry padding;
-  final double minHeight;
 
   /// When supplied, this half becomes editable — the user can type a phrase or
   /// correct a misheard transcription and translate that instead.

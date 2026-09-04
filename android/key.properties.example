@@ -1,0 +1,9 @@
+# Copy to android/key.properties and fill in, after creating a keystore with
+# the keytool command in the README. That file is gitignored — it holds the
+# passwords to your signing key.
+#
+# storeFile is resolved relative to the android/ directory.
+storePassword=REDACTED_ROTATED_CREDENTIAL
+keyPassword=REDACTED_ROTATED_CREDENTIAL
+keyAlias=linguago
+storeFile=linguago-release.jks
