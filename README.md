@@ -66,6 +66,13 @@ Bonjour, je suis un peu fatigué.
 required to memory-map a 2.6 GB model, and a free Personal Team cannot sign
 them.
 
+`DEVELOPMENT_TEAM` is intentionally blank in the checked-in project, so set
+your own before building for iOS: open `ios/Runner.xcworkspace`, select the
+Runner target, and pick your team under **Signing & Capabilities**. If Xcode
+says the profile lacks an entitlement, add *Increased Memory Limit* and
+*Extended Virtual Addressing* via **+ Capability** — editing
+`Runner.entitlements` alone doesn't register them with Apple.
+
 ---
 
 ## Getting started
@@ -241,11 +248,6 @@ GPU is both faster *and* lighter on Android; on iOS it buys speed at double the
 memory. The app picks per platform and falls back to CPU if the preferred
 backend is unavailable.
 
-**Fonts are fetched at runtime.** `google_fonts` downloads Plus Jakarta Sans on
-first launch, so a cold start with no network silently falls back to a system
-font. This contradicts the offline promise and is an open issue — bundling the
-font locally is the fix.
-
 ---
 
 ## Privacy
@@ -267,6 +269,7 @@ font locally is the fix.
 | Runtime | LiteRT-LM via `flutter_gemma` + `flutter_gemma_litertlm` |
 | Audio in | `record` — 16 kHz mono WAV, the model's native format |
 | Audio out | `flutter_tts` — platform speech engines, offline |
+| Typography | Plus Jakarta Sans, bundled — never fetched at runtime |
 | State | Riverpod (no codegen) |
 | Models | Freezed + json_serializable |
 
@@ -285,11 +288,12 @@ the toolchain that will otherwise cost you an afternoon.
 
 ## License
 
-> **TODO:** No license file yet. Until one is added, default copyright applies
-> and others cannot legally reuse this code. MIT or Apache-2.0 are the usual
-> choices for a project like this.
+[Apache License 2.0](LICENSE).
 
-The Gemma 4 model itself is distributed under Apache 2.0 by Google and is not
+Plus Jakarta Sans is bundled under the [SIL Open Font License
+1.1](assets/fonts/OFL.txt).
+
+The Gemma 4 model is distributed under Apache 2.0 by Google and is **not**
 redistributed here — the app downloads it from
 [litert-community](https://huggingface.co/litert-community/gemma-4-E2B-it-litert-lm)
 at runtime.

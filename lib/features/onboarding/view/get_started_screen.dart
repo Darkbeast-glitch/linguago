@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app/app_router.dart';
 import '../../../core/storage/app_preferences.dart';
@@ -140,7 +139,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
                       child: Text.rich(
                         TextSpan(
                           text: 'Break Free\nfrom Language\nBarriers',
-                          style: GoogleFonts.plusJakartaSans(
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 34,
                             fontWeight: FontWeight.bold,
@@ -156,7 +155,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
                     opacity: _subtitleFade,
                     child: Text(
                       'Speak in English or French and hear the\ntranslation instantly fully offline.',
-                      style: GoogleFonts.plusJakartaSans(
+                      style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 16,
                         height: 1.4,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app/app_router.dart';
 import '../../../core/widgets/flag_circle.dart';
@@ -40,7 +39,7 @@ class HomeScreen extends ConsumerWidget {
             // ── Searched languages ────────────────────────────────────────
             Text(
               'Popular Translations',
-              style: GoogleFonts.plusJakartaSans(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
@@ -96,7 +95,7 @@ class HomeScreen extends ConsumerWidget {
             // ── Recommended ───────────────────────────────────────────────
             Text(
               'Recommended',
-              style: GoogleFonts.plusJakartaSans(
+              style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
                 color: Colors.black87,
@@ -225,9 +224,9 @@ class _LanguageTile extends ConsumerWidget {
           const SizedBox(height: 4),
           Text(
             language.displayName,
-            style: GoogleFonts.plusJakartaSans(
+            style: const TextStyle(
               fontSize: 10,
-              color: const Color(0xFF6B7280),
+              color: Color(0xFF6B7280),
               fontWeight: FontWeight.w500,
             ),
             overflow: TextOverflow.ellipsis,
@@ -273,7 +272,7 @@ class _FeatureCard extends StatelessWidget {
               right: 18,
               child: Text(
                 label,
-                style: GoogleFonts.plusJakartaSans(
+                style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                   color: labelColor,
@@ -340,7 +339,7 @@ class _VoiceTranslationCard extends StatelessWidget {
                 children: [
                   Text(
                     'Voice\nTranslation',
-                    style: GoogleFonts.plusJakartaSans(
+                    style: const TextStyle(
                       fontSize: 26,
                       fontWeight: FontWeight.bold,
                       color: Colors.black,
@@ -460,7 +459,7 @@ class _RecommendedCard extends ConsumerWidget {
             Expanded(
               child: Text(
                 '${from.displayName} to ${to.displayName}',
-                style: GoogleFonts.plusJakartaSans(
+                style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
                   color: Colors.black87,

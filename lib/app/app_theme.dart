@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 /// Design tokens pulled from `linguagodesigns/designs_system.png`
 /// (LinguaLearn Design System v1.0).
@@ -19,6 +18,10 @@ abstract final class AppColors {
 class AppTheme {
   const AppTheme._();
 
+  /// Declared in pubspec.yaml from assets/fonts/. Applied as the theme's
+  /// `fontFamily` so every widget inherits it.
+  static const String fontFamily = 'PlusJakartaSans';
+
   static ThemeData get light {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: AppColors.primaryPurple,
@@ -30,30 +33,33 @@ class AppTheme {
       error: AppColors.error,
     );
 
-    final baseTextTheme = GoogleFonts.plusJakartaSansTextTheme().copyWith(
-      headlineLarge: GoogleFonts.plusJakartaSans(
+    // Bundled font, set once on the theme so no widget needs to name it —
+    // and nothing reaches the network to render text.
+    const baseTextTheme = TextTheme(
+      headlineLarge: TextStyle(
         fontSize: 32,
         fontWeight: FontWeight.bold,
         color: AppColors.primaryPurple,
       ),
-      headlineMedium: GoogleFonts.plusJakartaSans(
+      headlineMedium: TextStyle(
         fontSize: 24,
         fontWeight: FontWeight.w600,
         color: AppColors.primaryPurple,
       ),
-      headlineSmall: GoogleFonts.plusJakartaSans(
+      headlineSmall: TextStyle(
         fontSize: 18,
         fontWeight: FontWeight.w500,
         color: AppColors.primaryPurple,
       ),
-      bodyLarge: GoogleFonts.plusJakartaSans(fontSize: 16, color: Colors.black87),
-      bodyMedium: GoogleFonts.plusJakartaSans(fontSize: 16, color: AppColors.textGray),
+      bodyLarge: TextStyle(fontSize: 16, color: Colors.black87),
+      bodyMedium: TextStyle(fontSize: 16, color: AppColors.textGray),
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: AppColors.backgroundGray,
+      fontFamily: AppTheme.fontFamily,
       textTheme: baseTextTheme,
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,

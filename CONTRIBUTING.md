@@ -8,6 +8,11 @@ otherwise cost you an afternoon.
 
 ## Setup
 
+`DEVELOPMENT_TEAM` is blank in the checked-in Xcode project — set your own
+before building for iOS (see the [README](README.md#requirements)). Never
+commit a team ID or anything from `key.properties`; that file is gitignored,
+and `key.properties.example` must only ever hold placeholders.
+
 ```bash
 flutter pub get
 dart run build_runner build --delete-conflicting-outputs
@@ -134,7 +139,8 @@ These are deliberate. Please open an issue before crossing them:
 - **No feature creep into a chat app.** No conversation history, no generic
   assistant, no lessons.
 
-Firebase appears in CI configuration for build distribution only. It is not a
+Firebase appears in CI configuration for build distribution only (its unused
+Android config file was removed from the repo). It is not a
 dependency of the app and must not become one.
 
 ---
@@ -216,9 +222,6 @@ exists for an upstream bug, say which bug and what would let us remove it.
 
 ## Good first issues
 
-- **Bundle Plus Jakarta Sans locally.** `google_fonts` currently fetches it at
-  runtime, so a cold first launch with no network falls back to a system font —
-  contradicting the app's central claim.
 - **Test fr→en.** The reverse direction has never been verified end to end.
 - **Mirror the model to resumable hosting**, so users stop losing 2.6 GB
   downloads at 90%.

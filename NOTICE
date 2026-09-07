@@ -1,0 +1,15 @@
+Linguago
+Copyright 2026 Julius Boakye
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+This product bundles the Plus Jakarta Sans font, distributed under the
+SIL Open Font License 1.1. See assets/fonts/OFL.txt.
+
+This product downloads and runs Google's Gemma 4 model at runtime. The model
+is distributed by Google under the Apache License 2.0 and is not redistributed
+as part of this repository.
