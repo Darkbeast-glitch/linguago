@@ -1,9 +1,21 @@
-# Copy to android/key.properties and fill in, after creating a keystore with
-# the keytool command in the README. That file is gitignored — it holds the
-# passwords to your signing key.
+# Template. Copy to android/key.properties and fill in your own values.
+#
+#     cp android/key.properties.example android/key.properties
+#
+# Edit the COPY, never this file — key.properties is gitignored, this template
+# is not. A real password typed in here gets committed and published.
+#
+# Create the keystore first:
+#
+#     cd android
+#     keytool -genkey -v -keystore linguago-release.jks \
+#       -keyalg RSA -keysize 2048 -validity 10000 -alias linguago
+#
+# Back the .jks up somewhere safe. Losing it means you can never ship an
+# update to anyone who already installed the app.
 #
 # storeFile is resolved relative to the android/ directory.
-storePassword=REDACTED_ROTATED_CREDENTIAL
-keyPassword=REDACTED_ROTATED_CREDENTIAL
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
 keyAlias=linguago
 storeFile=linguago-release.jks

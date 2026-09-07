@@ -59,3 +59,8 @@ app.*.map.json
 android/key.properties
 *.jks
 *.keystore
+
+# Firebase config — not used by the app (no plugin applied, no Dart reference).
+# Kept out so the project id / API key aren't published for no benefit.
+google-services.json
+GoogleService-Info.plist
