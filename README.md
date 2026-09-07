@@ -252,12 +252,21 @@ backend is unavailable.
 
 ## Privacy
 
+Full policy: **[PRIVACY.md](PRIVACY.md)**, also readable inside the app under
+Settings → Privacy (embedded rather than linked, since an offline app
+shouldn't need a connection to explain itself).
+
 - Audio is recorded to a temporary file, read once, and **deleted immediately**.
 - Nothing you say is transmitted anywhere. There is no analytics SDK, no
   crash reporter, and no backend.
 - Debug logging of transcripts is `kDebugMode`-guarded, so speech content cannot
   reach a release build's logs.
 - The only network request the app ever makes is the one-time model download.
+- **One caveat, disclosed honestly:** tapping the speaker hands translated
+  *text* to the platform speech engine. iOS synthesises on-device; on Android
+  it depends on the engine the user has selected, and some send text to their
+  own servers. That's the engine's behaviour, not the app's, but it is the only
+  path by which translated text could leave the device.
 
 ---
 

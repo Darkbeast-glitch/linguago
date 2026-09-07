@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/app_router.dart';
 import '../../../app/app_theme.dart';
 import '../../translation/viewmodel/translation_viewmodel.dart';
 import '../viewmodel/settings_viewmodel.dart';
@@ -45,10 +46,12 @@ class SettingsScreen extends ConsumerWidget {
             title: Text('Linguago'),
             subtitle: Text('Offline voice translation. No accounts, no cloud, no chat history.'),
           ),
-          const ListTile(
-            leading: Icon(Icons.privacy_tip_outlined),
-            title: Text('Privacy'),
-            subtitle: Text('Audio is processed on-device and never uploaded.'),
+          ListTile(
+            leading: const Icon(Icons.privacy_tip_outlined),
+            title: const Text('Privacy'),
+            subtitle: const Text('Audio is processed on-device and never uploaded.'),
+            trailing: const Icon(Icons.chevron_right_rounded),
+            onTap: () => Navigator.of(context).pushNamed(AppRoutes.privacy),
           ),
         ],
       ),

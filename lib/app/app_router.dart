@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../features/home/view/home_screen.dart';
 import '../features/model_setup/view/model_setup_screen.dart';
 import '../features/onboarding/view/get_started_screen.dart';
+import '../features/settings/view/privacy_screen.dart';
 import '../features/settings/view/settings_screen.dart';
 import '../features/translation/view/translation_screen.dart';
 
@@ -14,6 +15,7 @@ abstract final class AppRoutes {
   static const home = '/home';
   static const translator = '/translator';
   static const settings = '/settings';
+  static const privacy = '/privacy';
 }
 
 class AppRouter {
@@ -32,6 +34,8 @@ class AppRouter {
         );
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
+      case AppRoutes.privacy:
+        return MaterialPageRoute(builder: (_) => const PrivacyScreen());
       case AppRoutes.getStarted:
       default:
         return MaterialPageRoute(builder: (_) => const GetStartedScreen());

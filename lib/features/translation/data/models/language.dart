@@ -80,13 +80,15 @@ abstract final class SupportedLanguages {
     ttsLocale: 'it-IT',
   );
 
-  /// Brazilian Portuguese: far more speakers than the European variant, and
-  /// the voice both platforms ship by default.
+  /// European Portuguese, matching the flag artwork. Brazilian Portuguese has
+  /// far more speakers, so if this should target Brazil instead, change the
+  /// locale to `pt-BR` *and* the flag — the two disagreeing is what made this
+  /// worth a comment.
   static const portuguese = Language(
     code: 'pt',
     displayName: 'Portuguese',
     flagAsset: 'assets/Images/portugal.png',
-    ttsLocale: 'pt-BR',
+    ttsLocale: 'pt-PT',
   );
 
   static const dutch = Language(
@@ -124,7 +126,7 @@ abstract final class SupportedLanguages {
   static const chinese = Language(
     code: 'zh',
     displayName: 'Chinese',
-    flagAsset: 'assets/Images/chineese.png',
+    flagAsset: 'assets/Images/chinese.png',
     ttsLocale: 'zh-CN',
   );
 

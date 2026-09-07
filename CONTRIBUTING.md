@@ -223,6 +223,7 @@ exists for an upstream bug, say which bug and what would let us remove it.
 ## Good first issues
 
 - **Test fr→en.** The reverse direction has never been verified end to end.
+- **Test the other 13 languages.** Only English→French has run on hardware.
 - **Mirror the model to resumable hosting**, so users stop losing 2.6 GB
   downloads at 90%.
 - **Add a language.** See the
