@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/app_router.dart';
 import '../../../app/app_theme.dart';
+import '../../../core/widgets/flag_circle.dart';
 import '../../translation/data/models/language.dart';
 import '../../translation/viewmodel/translation_viewmodel.dart';
 
@@ -125,10 +126,7 @@ class _LanguageSearchSheetState extends ConsumerState<LanguageSearchSheet> {
                     final language = _results[index];
                     return ListTile(
                       enabled: language.isEnabled,
-                      leading: Text(
-                        language.flagEmoji,
-                        style: const TextStyle(fontSize: 26),
-                      ),
+                      leading: FlagCircle(language: language, size: 32),
                       title: Text(language.displayName),
                       subtitle: language.isEnabled
                           ? null

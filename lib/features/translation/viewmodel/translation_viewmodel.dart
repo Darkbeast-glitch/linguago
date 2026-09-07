@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../core/errors/app_exception.dart';
+import '../../home/viewmodel/home_viewmodel.dart';
 import '../../settings/viewmodel/settings_viewmodel.dart';
 import '../data/datasources/audio_datasource.dart';
 import '../data/datasources/gemma_datasource.dart';
@@ -153,6 +154,12 @@ class TranslationViewModel extends Notifier<TranslationState> {
         translation: result.translation,
       );
 
+      // Record this target language so the home screen's "Searched languages"
+      // row reflects what the user actually uses.
+      ref
+          .read(homeViewModelProvider.notifier)
+          .recordLanguageUsed(state.targetLanguage.code);
+
       // "Speak, then hear it" is the whole point of the product (PRD §31), so
       // play the result automatically unless the user turned that off.
       if (ref.read(settingsViewModelProvider).autoPlayTranslatedSpeech) {
@@ -205,6 +212,12 @@ class TranslationViewModel extends Notifier<TranslationState> {
         transcription: result.transcription,
         translation: result.translation,
       );
+
+      // Record this target language so the home screen's "Searched languages"
+      // row reflects what the user actually uses.
+      ref
+          .read(homeViewModelProvider.notifier)
+          .recordLanguageUsed(state.targetLanguage.code);
 
       if (ref.read(settingsViewModelProvider).autoPlayTranslatedSpeech) {
         await speakTranslation();

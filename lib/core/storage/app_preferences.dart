@@ -47,4 +47,25 @@ class AppPreferences {
     await _prefs.setString(_kSourceLanguage, source);
     await _prefs.setString(_kTargetLanguage, target);
   }
+
+  // ── Recent languages ────────────────────────────────────────────────────────
+
+  static const _kRecentLanguages = 'recent_language_codes';
+
+  /// Maximum number of codes kept. Oldest entries are evicted once the list
+  /// would exceed this, so the row never grows unbounded.
+  static const int maxRecent = 8;
+
+  /// Ordered list of recently-used target language codes, most-recent first.
+  List<String> get recentLanguageCodes =>
+      _prefs.getStringList(_kRecentLanguages) ?? [];
+
+  /// Prepends [code] to the list, de-duplicates, and trims to [maxRecent].
+  Future<void> addRecentLanguage(String code) async {
+    final updated = [
+      code,
+      ...recentLanguageCodes.where((c) => c != code),
+    ].take(maxRecent).toList();
+    await _prefs.setStringList(_kRecentLanguages, updated);
+  }
 }

@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:linguago/app/app.dart';
 import 'package:linguago/core/storage/app_preferences.dart';
+import 'package:linguago/features/home/view/home_screen.dart';
 import 'package:linguago/features/model_setup/data/model_repository.dart';
 import 'package:linguago/features/model_setup/viewmodel/model_setup_viewmodel.dart';
 
@@ -184,7 +185,9 @@ void main() {
     await _settleAnimations(tester);
 
     expect(repository.loadCalled, isTrue);
-    expect(find.text('Searched languages'), findsOneWidget);
+    // Asserts on the screen rather than a heading string — the copy on that
+    // screen is still being iterated and shouldn't break this test.
+    expect(find.byType(HomeScreen), findsOneWidget);
   });
 
   testWidgets('Cellular connections get a data warning before downloading',

@@ -177,11 +177,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
               opacity: _flagsFade,
               child: SlideTransition(
                 position: _flagsSlide,
-                child: Image.asset(
-                  'assets/Images/flags.png',
-                  width: double.infinity,
-                  fit: BoxFit.fitWidth,
-                ),
+                child: const _FlagCluster(),
               ),
             ),
 
@@ -209,6 +205,64 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
           ],
         ),
       ),
+    );
+  }
+}
+
+/// The scattered flag cluster from `Get Started Screen.png`.
+///
+/// Composed from the individual flag assets rather than one pre-rendered
+/// image: the previous `flags.png` was a flattened export, so every language
+/// added or artwork changed meant re-exporting it — and when it was removed,
+/// this screen silently referenced a file that no longer existed.
+class _FlagCluster extends StatelessWidget {
+  const _FlagCluster();
+
+  /// Fractional positions within the cluster, mirroring the mockup's layout —
+  /// two flags bleeding off each edge, one large flag anchoring the centre.
+  static const _flags = <({String asset, double x, double y, double scale})>[
+    (asset: 'assets/Images/france.png', x: 0.02, y: 0.00, scale: 0.56),
+    (asset: 'assets/Images/spain.png', x: 0.72, y: 0.06, scale: 0.52),
+    (asset: 'assets/Images/uk.png', x: 0.33, y: 0.30, scale: 1.00),
+    (asset: 'assets/Images/arab.png', x: 0.86, y: 0.42, scale: 0.48),
+    (asset: 'assets/Images/german.png', x: 0.04, y: 0.62, scale: 0.60),
+    (asset: 'assets/Images/japan.png', x: 0.62, y: 0.70, scale: 0.56),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = constraints.maxWidth;
+        // Slightly taller than wide, matching the mockup's proportions.
+        final height = width * 0.88;
+        final unit = width * 0.34;
+
+        return SizedBox(
+          width: width,
+          height: height,
+          child: Stack(
+            clipBehavior: Clip.none,
+            children: [
+              for (final flag in _flags)
+                Positioned(
+                  left: flag.x * width,
+                  top: flag.y * height,
+                  child: ClipOval(
+                    child: Image.asset(
+                      flag.asset,
+                      width: unit * flag.scale,
+                      height: unit * flag.scale,
+                      fit: BoxFit.cover,
+                      // One missing asset shouldn't blank the whole screen.
+                      errorBuilder: (_, _, _) => const SizedBox.shrink(),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

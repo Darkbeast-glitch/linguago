@@ -1,7 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:background_downloader/background_downloader.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_gemma/flutter_gemma.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
@@ -162,16 +162,48 @@ class GemmaDataSource {
       throw const ModelUnavailableException();
     }
 
-    _model = await FlutterGemma.getActiveModel(
-      maxTokens: ModelConfig.maxTokens,
-      // On Android GPU is both faster *and* lighter than CPU — Google's E2B
-      // figures for a Galaxy S26 Ultra are 3808 vs 557 tok/s prefill and
-      // 676 MB vs 1733 MB resident. (The trade-off inverts on iPhone: CPU
-      // 607 MB / GPU 1450 MB.) Devices without the RAM to load the model at
-      // all are turned away by `DeviceCapability` before this point.
-      preferredBackend: PreferredBackend.gpu,
-      supportAudio: true,
-    );
+    _model = await _loadWithBackendFallback();
+  }
+
+  /// Loads on the preferred backend, retrying on CPU if that fails.
+  ///
+  /// The right backend differs per platform and the trade-off inverts between
+  /// them. Google's E2B figures:
+  ///
+  /// | Platform          | CPU     | GPU     |
+  /// |-------------------|---------|---------|
+  /// | Galaxy S26 Ultra  | 1733 MB | 676 MB  |
+  /// | iPhone 17 Pro     | 607 MB  | 1450 MB |
+  ///
+  /// So GPU is both faster *and* lighter on Android, while on iOS it buys
+  /// speed at more than double the memory. iOS is also where GPU support is
+  /// least proven — `flutter_litert_lm` has described its iOS backend as
+  /// CPU-only — so CPU is the safer default there.
+  ///
+  /// The fallback exists because a backend the runtime can't provide should
+  /// degrade to a slower translation, not to no app. Devices without the RAM
+  /// to load the model at all are turned away by `DeviceCapability` earlier.
+  Future<InferenceModel> _loadWithBackendFallback() async {
+    final preferred = Platform.isIOS ? PreferredBackend.cpu : PreferredBackend.gpu;
+
+    try {
+      return await FlutterGemma.getActiveModel(
+        maxTokens: ModelConfig.maxTokens,
+        preferredBackend: preferred,
+        supportAudio: true,
+      );
+    } catch (e) {
+      if (preferred == PreferredBackend.cpu) rethrow;
+
+      if (kDebugMode) {
+        debugPrint('[Linguago] $preferred backend failed ($e) — retrying on CPU');
+      }
+      return FlutterGemma.getActiveModel(
+        maxTokens: ModelConfig.maxTokens,
+        preferredBackend: PreferredBackend.cpu,
+        supportAudio: true,
+      );
+    }
   }
 
   /// Makes an already-present model file the active one again.

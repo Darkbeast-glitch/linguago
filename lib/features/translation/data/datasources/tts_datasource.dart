@@ -42,9 +42,27 @@ class TtsDataSource {
   /// failure mode of guessing wrong is silently refusing a working voice.
   Future<bool> isAvailable(Language language) async {
     if (!language.supportsTts) return false;
+
+    // Each probe is guarded separately, and deliberately so: iOS does not
+    // implement `isLanguageInstalled` at all — there is no handler for it in
+    // SwiftFlutterTtsPlugin — so it throws MissingPluginException there. A
+    // single try/catch around both would swallow that and return false,
+    // silently making speech permanently "unavailable" on every iPhone even
+    // when a perfectly good voice exists.
+    if (await _probe(() => _tts.isLanguageInstalled(language.ttsLocale))) {
+      return true;
+    }
+    // The broader check, and the only one iOS answers. On Android it can be
+    // true for a voice that still needs downloading — attempting playback and
+    // reporting a real failure beats refusing up front.
+    return _probe(() => _tts.isLanguageAvailable(language.ttsLocale));
+  }
+
+  /// Runs one platform check, treating "not implemented here" as "no answer"
+  /// rather than as "no".
+  Future<bool> _probe(Future<dynamic> Function() check) async {
     try {
-      if (await _tts.isLanguageInstalled(language.ttsLocale) == true) return true;
-      return await _tts.isLanguageAvailable(language.ttsLocale) == true;
+      return await check() == true;
     } catch (_) {
       return false;
     }
@@ -54,24 +72,33 @@ class TtsDataSource {
   /// message can be traced to the device rather than guessed at. Debug only.
   Future<void> debugDumpVoices(Language language) async {
     if (!kDebugMode) return;
-    try {
-      await _configure();
-      final engines = await _tts.getEngines;
-      final languages = await _tts.getLanguages;
-      final installed = await _tts.isLanguageInstalled(language.ttsLocale);
-      final available = await _tts.isLanguageAvailable(language.ttsLocale);
-      final matching = (languages is List)
-          ? languages.where((l) => '$l'.toLowerCase().startsWith(language.code)).toList()
-          : languages;
-      debugPrint(
-        '[Linguago/TTS] locale=${language.ttsLocale} '
-        'installed=$installed available=$available\n'
-        '  engines=$engines\n'
-        '  matching "${language.code}" locales=$matching',
-      );
-    } catch (e) {
-      debugPrint('[Linguago/TTS] probe failed: $e');
+
+    // Every call is isolated: several of these are implemented on only one
+    // platform (`getEngines` and `isLanguageInstalled` are Android-only), and
+    // one unsupported call must not stop the rest of the diagnostic from
+    // printing — that would leave the exact failure we're trying to explain
+    // unexplained.
+    Future<Object?> probe(Future<dynamic> Function() call) async {
+      try {
+        return await call();
+      } catch (e) {
+        return 'unsupported on this platform ($e)';
+      }
     }
+
+    await probe(_configure);
+    final languages = await probe(() async => _tts.getLanguages);
+    final matching = languages is List
+        ? languages.where((l) => '$l'.toLowerCase().startsWith(language.code)).toList()
+        : languages;
+
+    debugPrint(
+      '[Linguago/TTS] locale=${language.ttsLocale}\n'
+      '  isLanguageInstalled: ${await probe(() => _tts.isLanguageInstalled(language.ttsLocale))}\n'
+      '  isLanguageAvailable: ${await probe(() => _tts.isLanguageAvailable(language.ttsLocale))}\n'
+      '  engines: ${await probe(() async => _tts.getEngines)}\n'
+      '  locales matching "${language.code}": $matching',
+    );
   }
 
   /// Speaks [text] in [language], returning once playback has finished.

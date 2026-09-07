@@ -14,8 +14,14 @@ import '../viewmodel/translation_viewmodel.dart';
 /// `linguagodesigns/Tranlsate Screen.png`: one card split into a source half
 /// and a target half with a swap button overlapping the seam, and a bottom
 /// toolbar with the mic as the primary action.
+///
+/// [startWithKeyboard] is set to `true` when navigating from the
+/// "Translate Every Word" card — it auto-focuses the source text field so
+/// the keyboard appears immediately and the user can type straight away.
 class TranslationScreen extends ConsumerStatefulWidget {
-  const TranslationScreen({super.key});
+  const TranslationScreen({super.key, this.startWithKeyboard = false});
+
+  final bool startWithKeyboard;
 
   @override
   ConsumerState<TranslationScreen> createState() => _TranslationScreenState();
@@ -24,6 +30,18 @@ class TranslationScreen extends ConsumerStatefulWidget {
 class _TranslationScreenState extends ConsumerState<TranslationScreen> {
   final _sourceController = TextEditingController();
   final _sourceFocus = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.startWithKeyboard) {
+      // Wait one frame so the widget tree is fully built before requesting
+      // focus — requesting it synchronously in initState is a no-op.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _sourceFocus.requestFocus();
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -177,6 +195,7 @@ class _TranslateCard extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
               child: _LanguageHalf(
                 language: state.sourceLanguage,
+                otherLanguage: state.targetLanguage,
                 onLanguageChanged: viewModel.setSourceLanguage,
                 text: state.transcription ?? _placeholderFor(state.status, isSource: true),
                 editController: sourceController,
@@ -210,6 +229,7 @@ class _TranslateCard extends StatelessWidget {
               clipBehavior: Clip.antiAlias,
               child: _LanguageHalf(
                 language: state.targetLanguage,
+                otherLanguage: state.sourceLanguage,
                 onLanguageChanged: viewModel.setTargetLanguage,
                 text: state.translation ?? _placeholderFor(state.status, isSource: false),
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 36, bottom: 20),
@@ -392,6 +412,7 @@ class _LanguageHalf extends StatelessWidget {
     required this.language,
     required this.onLanguageChanged,
     required this.text,
+    this.otherLanguage,
     this.leadingActions = const [],
     this.trailingActions = const [],
     this.editController,
@@ -406,6 +427,10 @@ class _LanguageHalf extends StatelessWidget {
   final Language language;
   final ValueChanged<Language> onLanguageChanged;
   final String text;
+
+  /// The language on the other half, so the picker can grey it out — source
+  /// and target must differ.
+  final Language? otherLanguage;
   final List<Widget> leadingActions;
   final List<Widget> trailingActions;
   final EdgeInsetsGeometry padding;
@@ -429,7 +454,11 @@ class _LanguageHalf extends StatelessWidget {
             children: [
               ...leadingActions,
               if (leadingActions.isNotEmpty) const SizedBox(width: 8),
-              LanguageSelector(selected: language, onChanged: onLanguageChanged),
+              LanguageSelector(
+                selected: language,
+                onChanged: onLanguageChanged,
+                unavailable: otherLanguage,
+              ),
               const Spacer(),
               ...trailingActions,
             ],

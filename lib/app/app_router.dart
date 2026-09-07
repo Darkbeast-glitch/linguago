@@ -26,7 +26,10 @@ class AppRouter {
       case AppRoutes.home:
         return MaterialPageRoute(builder: (_) => const HomeScreen());
       case AppRoutes.translator:
-        return MaterialPageRoute(builder: (_) => const TranslationScreen());
+        final startWithKeyboard = settings.arguments as bool? ?? false;
+        return MaterialPageRoute(
+          builder: (_) => TranslationScreen(startWithKeyboard: startWithKeyboard),
+        );
       case AppRoutes.settings:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case AppRoutes.getStarted:

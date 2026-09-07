@@ -15,7 +15,11 @@ abstract class Language with _$Language {
     /// BCP-47-ish language code, e.g. "en", "fr".
     required String code,
     required String displayName,
-    required String flagEmoji,
+    /// Path to a flag image in `assets/Images/`, or null when one hasn't been
+    /// drawn yet — the UI then falls back to a lettered badge rather than an
+    /// emoji, whose rendering varies wildly across platforms and is banned on
+    /// some of them.
+    String? flagAsset,
 
     /// Full locale handed to the offline TTS engine, e.g. "en-US". Platform
     /// speech engines match on region, so a bare "en" is not enough.
@@ -29,21 +33,127 @@ abstract class Language with _$Language {
       _$LanguageFromJson(json);
 }
 
-/// The MVP's fixed language set (PRD §3, §7): English + French, with a
-/// configurable-but-disabled third language.
+/// The languages the app offers.
+///
+/// Gemma 4 E2B understands 140+ languages, so adding one here is a data change
+/// rather than a model change — nothing else in the app is hardcoded to a
+/// particular pair. The set below is limited to high-resource languages that
+/// (a) the model handles well and (b) have base text-to-speech voices on both
+/// iOS and Android, so the promise of hearing the result back actually holds.
+///
+/// Adding a language is cheap; *trusting* it is not. Speech-recognition quality
+/// varies widely — Gemma's CoVoST average of 33.47 hides a wide spread — so
+/// test a new entry on a real device before treating it as supported.
 abstract final class SupportedLanguages {
   static const english = Language(
     code: 'en',
     displayName: 'English',
-    flagEmoji: '🇬🇧',
+    flagAsset: 'assets/Images/uk.png',
     ttsLocale: 'en-US',
   );
 
   static const french = Language(
     code: 'fr',
     displayName: 'French',
-    flagEmoji: '🇫🇷',
+    flagAsset: 'assets/Images/france.png',
     ttsLocale: 'fr-FR',
+  );
+
+  static const spanish = Language(
+    code: 'es',
+    displayName: 'Spanish',
+    flagAsset: 'assets/Images/spain.png',
+    ttsLocale: 'es-ES',
+  );
+
+  static const german = Language(
+    code: 'de',
+    displayName: 'German',
+    flagAsset: 'assets/Images/german.png',
+    ttsLocale: 'de-DE',
+  );
+
+  static const italian = Language(
+    code: 'it',
+    displayName: 'Italian',
+    flagAsset: 'assets/Images/italian.png',
+    ttsLocale: 'it-IT',
+  );
+
+  /// Brazilian Portuguese: far more speakers than the European variant, and
+  /// the voice both platforms ship by default.
+  static const portuguese = Language(
+    code: 'pt',
+    displayName: 'Portuguese',
+    flagAsset: 'assets/Images/portugal.png',
+    ttsLocale: 'pt-BR',
+  );
+
+  static const dutch = Language(
+    code: 'nl',
+    displayName: 'Dutch',
+    flagAsset: 'assets/Images/dutch.png',
+    ttsLocale: 'nl-NL',
+  );
+
+  static const russian = Language(
+    code: 'ru',
+    displayName: 'Russian',
+    flagAsset: 'assets/Images/russian.png',
+    ttsLocale: 'ru-RU',
+  );
+
+  /// Right-to-left. Flutter renders the script correctly, but the translation
+  /// card is laid out left-aligned, so Arabic text sits on the wrong side.
+  /// Cosmetic, and worth fixing with a `Directionality` wrapper keyed to the
+  /// language.
+  static const arabic = Language(
+    code: 'ar',
+    displayName: 'Arabic',
+    flagAsset: 'assets/Images/arab.png',
+    ttsLocale: 'ar-SA',
+  );
+
+  static const hindi = Language(
+    code: 'hi',
+    displayName: 'Hindi',
+    flagAsset: 'assets/Images/hindi.png',
+    ttsLocale: 'hi-IN',
+  );
+
+  static const chinese = Language(
+    code: 'zh',
+    displayName: 'Chinese',
+    flagAsset: 'assets/Images/chineese.png',
+    ttsLocale: 'zh-CN',
+  );
+
+  static const japanese = Language(
+    code: 'ja',
+    displayName: 'Japanese',
+    flagAsset: 'assets/Images/japan.png',
+    ttsLocale: 'ja-JP',
+  );
+
+  static const korean = Language(
+    code: 'ko',
+    displayName: 'Korean',
+    flagAsset: 'assets/Images/korean.png',
+    ttsLocale: 'ko-KR',
+  );
+
+  static const turkish = Language(
+    code: 'tr',
+    displayName: 'Turkish',
+    flagAsset: 'assets/Images/turkish.png',
+    ttsLocale: 'tr-TR',
+  );
+
+  static const polish = Language(
+    code: 'pl',
+    displayName: 'Polish',
+    flagAsset: 'assets/Images/polish.png',
+    ttsLocale: 'pl-PL',
   );
 
   /// Disabled until the offline pipeline is validated for English ↔ French.
@@ -54,13 +164,32 @@ abstract final class SupportedLanguages {
   static const ewe = Language(
     code: 'ee',
     displayName: 'Ewe',
-    flagEmoji: '🇬🇭',
     ttsLocale: 'ee-GH',
     supportsTts: false,
     isEnabled: false,
   );
 
-  static const all = [english, french, ewe];
+  /// Order matters: this is the order the picker and search results show.
+  /// English and French lead because they're the pair the pipeline was proven
+  /// on; the rest follow roughly by number of speakers.
+  static const all = [
+    english,
+    french,
+    spanish,
+    german,
+    italian,
+    portuguese,
+    dutch,
+    russian,
+    arabic,
+    hindi,
+    chinese,
+    japanese,
+    korean,
+    turkish,
+    polish,
+    ewe,
+  ];
 
   static List<Language> get enabled => all.where((l) => l.isEnabled).toList();
 

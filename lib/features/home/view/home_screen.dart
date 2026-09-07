@@ -36,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
 
             // ── Searched languages ────────────────────────────────────────
             Text(
-              'Searched languages',
+              'Popular Translations',
               style: GoogleFonts.plusJakartaSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -44,29 +44,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            SizedBox(
-              height: 60,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                children: const [
-                  _FlagCircle(imagePath: 'assets/Images/spain.png'),
-                  SizedBox(width: 10),
-                  _FlagCircle(imagePath: 'assets/Images/uk.png'),
-                  SizedBox(width: 10),
-                  _FlagCircle(imagePath: 'assets/Images/germany.png'),
-                  SizedBox(width: 10),
-                  _FlagCircle(imagePath: 'assets/Images/canada.png'),
-                  SizedBox(width: 10),
-                  _FlagCircle(imagePath: 'assets/Images/france.png'),
-                  SizedBox(width: 10),
-                  _FlagCircle(imagePath: 'assets/Images/france.png'),
-                  SizedBox(width: 10),
-                  _FlagCircle(imagePath: 'assets/Images/france.png'),
-                  SizedBox(width: 10),
-                  _FlagCircle(imagePath: 'assets/Images/france.png'),
-                ],
-              ),
-            ),
+            _PopularLanguagesRow(),
 
             const SizedBox(height: 20),
 
@@ -81,8 +59,10 @@ class HomeScreen extends ConsumerWidget {
                       color: const Color(0xFF7B61FF),
                       label: 'Translate\nEvery\nWord',
                       labelColor: Colors.white,
-                      onTap: () =>
-                          Navigator.of(context).pushNamed(AppRoutes.translator),
+                      onTap: () => Navigator.of(context).pushNamed(
+                        AppRoutes.translator,
+                        arguments: true, // open with keyboard focused
+                      ),
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -160,15 +140,73 @@ class _CircleIconButton extends StatelessWidget {
   }
 }
 
-class _FlagCircle extends StatelessWidget {
-  const _FlagCircle({required this.imagePath});
+/// Horizontally-scrolling row of popular world language flags.
+///
+/// Always visible — these are curated popular languages, not dynamic.
+class _PopularLanguagesRow extends StatelessWidget {
+  const _PopularLanguagesRow();
 
-  final String imagePath;
+  /// 8 of the most-translated world languages, shown as emoji circles.
+  static const _flags = [
+    ('🇬🇧', 'English'),
+    ('🇫🇷', 'French'),
+    ('🇪🇸', 'Spanish'),
+    ('🇩🇪', 'German'),
+    ('🇯🇵', 'Japanese'),
+    ('🇨🇳', 'Chinese'),
+    ('🇦🇪', 'Arabic'),
+    ('🇵🇹', 'Portuguese'),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return ClipOval(
-      child: Image.asset(imagePath, width: 58, height: 58, fit: BoxFit.cover),
+    return SizedBox(
+      height: 76,
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemCount: _flags.length,
+        separatorBuilder: (_, _) => const SizedBox(width: 10),
+        itemBuilder: (_, i) =>
+            _FlagCircle(emoji: _flags[i].$1, label: _flags[i].$2),
+      ),
+    );
+  }
+}
+
+/// A single flag-emoji circle with a small language name label beneath it.
+class _FlagCircle extends StatelessWidget {
+  const _FlagCircle({required this.emoji, required this.label});
+
+  final String emoji;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Container(
+          width: 52,
+          height: 52,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.circle,
+          ),
+          child: Center(
+            child: Text(emoji, style: const TextStyle(fontSize: 28)),
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          label,
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 10,
+            color: const Color(0xFF6B7280),
+            fontWeight: FontWeight.w500,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ],
     );
   }
 }
@@ -238,8 +276,8 @@ class _FeatureCard extends StatelessWidget {
                   color: isDisabled
                       ? const Color(0xFF6B7280)
                       : (labelColor == Colors.white
-                          ? Colors.white
-                          : Colors.yellow),
+                            ? Colors.white
+                            : Colors.yellow),
                   size: 20,
                 ),
               ),

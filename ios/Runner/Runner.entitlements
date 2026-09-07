@@ -2,16 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<!-- NOTE: These entitlements are required for on-device Gemma 4 (2.6 GB model).
-	     They require a PAID Apple Developer account ($99/yr).
-	     Commented out so the app builds with a Personal Team for now.
+	<!-- Required to load Gemma 4 E2B: a ~2.6 GB memory-mapped model.
+	     Resident memory is modest (~607 MB on CPU per Google's iPhone 17 Pro
+	     figures) — it is the size of the *virtual mapping* that needs
+	     extended-virtual-addressing. Without these, iOS is expected to kill
+	     the app when the weights are mapped.
 
+	     These require a PAID Apple Developer account; a free Personal Team
+	     cannot sign them. If Xcode reports the provisioning profile doesn't
+	     include an entitlement, add the matching capability through
+	     Signing & Capabilities so it is registered on the App ID — editing
+	     this file alone does not register anything with Apple. -->
 	<key>com.apple.developer.kernel.extended-virtual-addressing</key>
 	<true/>
 	<key>com.apple.developer.kernel.increased-memory-limit</key>
 	<true/>
 	<key>com.apple.developer.kernel.increased-debugging-memory-limit</key>
 	<true/>
-	-->
 </dict>
 </plist>
