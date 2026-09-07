@@ -97,6 +97,35 @@ void main() {
     expect(container.read(translationViewModelProvider).targetLanguage.code, 'en');
   });
 
+  testWidgets('setLanguagePair sets both halves, even when reversed',
+      (tester) async {
+    tester.view.devicePixelRatio = 3.0;
+    tester.view.physicalSize = const Size(390, 844) * 3.0;
+    addTearDown(tester.view.resetDevicePixelRatio);
+    addTearDown(tester.view.resetPhysicalSize);
+
+    await tester.pumpWidget(_screen(await _prefs()));
+    await tester.pump();
+
+    final container = ProviderScope.containerOf(
+      tester.element(find.byType(TranslationScreen)),
+    );
+    final viewModel = container.read(translationViewModelProvider.notifier);
+
+    // fr→en overlaps the current en→fr on both sides. Calling the two setters
+    // in sequence would drop a half, because each rejects a language already
+    // used on the other side.
+    viewModel.setLanguagePair(
+      source: SupportedLanguages.french,
+      target: SupportedLanguages.english,
+    );
+    await tester.pump();
+
+    final state = container.read(translationViewModelProvider);
+    expect(state.sourceLanguage.code, 'fr');
+    expect(state.targetLanguage.code, 'en');
+  });
+
   testWidgets('swapping clears a stale result', (tester) async {
     tester.view.devicePixelRatio = 3.0;
     tester.view.physicalSize = const Size(390, 844) * 3.0;

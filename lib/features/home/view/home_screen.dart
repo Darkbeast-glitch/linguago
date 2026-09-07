@@ -3,6 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../app/app_router.dart';
+import '../../../core/widgets/flag_circle.dart';
+import '../../translation/data/models/language.dart';
+import '../../translation/viewmodel/translation_viewmodel.dart';
 import 'home_menu_sheet.dart';
 import 'language_search_sheet.dart';
 
@@ -100,14 +103,23 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            _RecommendedCard(
-              from: '🇬🇧',
-              to: '🇫🇷',
-              label: 'English to French',
-              onTap: () =>
-                  Navigator.of(context).pushNamed(AppRoutes.translator),
-            ),
-            const SizedBox(height: 16),
+            // English → French leads because it is the only pair verified
+            // end to end on real hardware; the rest are common travel and
+            // business directions.
+            for (final pair in const [
+              (SupportedLanguages.english, SupportedLanguages.french),
+              (SupportedLanguages.english, SupportedLanguages.spanish),
+              (SupportedLanguages.english, SupportedLanguages.german),
+              (SupportedLanguages.english, SupportedLanguages.japanese),
+              (SupportedLanguages.french, SupportedLanguages.english),
+              (SupportedLanguages.spanish, SupportedLanguages.english),
+              (SupportedLanguages.english, SupportedLanguages.arabic),
+              (SupportedLanguages.english, SupportedLanguages.chinese),
+            ]) ...[
+              _RecommendedCard(from: pair.$1, to: pair.$2),
+              const SizedBox(height: 10),
+            ],
+            const SizedBox(height: 8),
           ],
         ),
       ),
@@ -146,16 +158,18 @@ class _CircleIconButton extends StatelessWidget {
 class _PopularLanguagesRow extends StatelessWidget {
   const _PopularLanguagesRow();
 
-  /// 8 of the most-translated world languages, shown as emoji circles.
-  static const _flags = [
-    ('🇬🇧', 'English'),
-    ('🇫🇷', 'French'),
-    ('🇪🇸', 'Spanish'),
-    ('🇩🇪', 'German'),
-    ('🇯🇵', 'Japanese'),
-    ('🇨🇳', 'Chinese'),
-    ('🇦🇪', 'Arabic'),
-    ('🇵🇹', 'Portuguese'),
+  /// Eight of the most-translated world languages, drawn from
+  /// [SupportedLanguages] rather than a parallel list — so a flag or name
+  /// changed there can't drift out of sync with what this row shows.
+  static final _languages = <Language>[
+    SupportedLanguages.english,
+    SupportedLanguages.french,
+    SupportedLanguages.spanish,
+    SupportedLanguages.german,
+    SupportedLanguages.japanese,
+    SupportedLanguages.chinese,
+    SupportedLanguages.arabic,
+    SupportedLanguages.portuguese,
   ];
 
   @override
@@ -164,49 +178,62 @@ class _PopularLanguagesRow extends StatelessWidget {
       height: 76,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        itemCount: _flags.length,
+        itemCount: _languages.length,
         separatorBuilder: (_, _) => const SizedBox(width: 10),
-        itemBuilder: (_, i) =>
-            _FlagCircle(emoji: _flags[i].$1, label: _flags[i].$2),
+        itemBuilder: (_, i) => _LanguageTile(language: _languages[i]),
       ),
     );
   }
 }
 
-/// A single flag-emoji circle with a small language name label beneath it.
-class _FlagCircle extends StatelessWidget {
-  const _FlagCircle({required this.emoji, required this.label});
+/// A flag circle with the language name beneath it. Tapping sets it as the
+/// target language and opens the translator.
+class _LanguageTile extends ConsumerWidget {
+  const _LanguageTile({required this.language});
 
-  final String emoji;
-  final String label;
+  final Language language;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          width: 52,
-          height: 52,
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
+  Widget build(BuildContext context, WidgetRef ref) {
+    return GestureDetector(
+      onTap: () {
+        final viewModel = ref.read(translationViewModelProvider.notifier);
+        final current = ref.read(translationViewModelProvider);
+
+        // Tapping the language you're already speaking means you want it as
+        // the source, so flip the pair rather than ignoring the tap.
+        if (language.code == current.sourceLanguage.code) {
+          viewModel.swapLanguages();
+        } else {
+          viewModel.setTargetLanguage(language);
+        }
+        Navigator.of(context).pushNamed(AppRoutes.translator);
+      },
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 52,
+            height: 52,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+            ),
+            padding: const EdgeInsets.all(2),
+            child: FlagCircle(language: language, size: 48),
           ),
-          child: Center(
-            child: Text(emoji, style: const TextStyle(fontSize: 28)),
+          const SizedBox(height: 4),
+          Text(
+            language.displayName,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 10,
+              color: const Color(0xFF6B7280),
+              fontWeight: FontWeight.w500,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: GoogleFonts.plusJakartaSans(
-            fontSize: 10,
-            color: const Color(0xFF6B7280),
-            fontWeight: FontWeight.w500,
-          ),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
@@ -383,23 +410,23 @@ class _Waveform extends StatelessWidget {
   }
 }
 
-class _RecommendedCard extends StatelessWidget {
-  const _RecommendedCard({
-    required this.from,
-    required this.to,
-    required this.label,
-    required this.onTap,
-  });
+class _RecommendedCard extends ConsumerWidget {
+  const _RecommendedCard({required this.from, required this.to});
 
-  final String from;
-  final String to;
-  final String label;
-  final VoidCallback onTap;
+  final Language from;
+  final Language to;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: () {
+        // Set both halves, not just the target — a recommendation is a
+        // direction, and honouring half of it would translate the wrong way
+        // round.
+        ref.read(translationViewModelProvider.notifier)
+            .setLanguagePair(source: from, target: to);
+        Navigator.of(context).pushNamed(AppRoutes.translator);
+      },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         decoration: BoxDecoration(
@@ -408,47 +435,31 @@ class _RecommendedCard extends StatelessWidget {
         ),
         child: Row(
           children: [
-            // Overlapping flags
+            // Overlapping flag pair, reading left-to-right as source → target.
             SizedBox(
               width: 64,
               height: 44,
               child: Stack(
                 children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Color(0xFFEEEEEE),
-                    ),
-                    child: Center(
-                      child: Text(from, style: const TextStyle(fontSize: 26)),
-                    ),
-                  ),
+                  FlagCircle(language: from, size: 44),
                   Positioned(
                     left: 22,
                     child: Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
-                        color: const Color(0xFFEEEEEE),
-                        border: Border.all(color: Colors.white, width: 2),
+                        color: Colors.white,
                       ),
-                      child: Center(
-                        child: Text(to, style: const TextStyle(fontSize: 26)),
-                      ),
+                      padding: const EdgeInsets.all(2),
+                      child: FlagCircle(language: to, size: 40),
                     ),
                   ),
                 ],
               ),
             ),
             const SizedBox(width: 12),
-            // Expanded so a long language pair (or a large accessibility text
-            // scale) wraps instead of overflowing the card.
             Expanded(
               child: Text(
-                label,
+                '${from.displayName} to ${to.displayName}',
                 style: GoogleFonts.plusJakartaSans(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -456,6 +467,7 @@ class _RecommendedCard extends StatelessWidget {
                 ),
               ),
             ),
+            const Icon(Icons.chevron_right_rounded, color: Color(0xFF9CA3AF)),
           ],
         ),
       ),

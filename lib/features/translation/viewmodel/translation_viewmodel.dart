@@ -86,6 +86,27 @@ class TranslationViewModel extends Notifier<TranslationState> {
     _rememberLanguagePair();
   }
 
+  /// Sets both halves at once.
+  ///
+  /// Distinct from calling the two setters in sequence: each of those rejects
+  /// a language that currently sits on the other side, so setting
+  /// English→Spanish while on Spanish→English would silently drop one half.
+  void setLanguagePair({required Language source, required Language target}) {
+    if (source.code == target.code) return;
+    if (state.status == TranslationStatus.recording ||
+        state.status == TranslationStatus.processing) {
+      return;
+    }
+
+    // Clears the previous result, which belonged to the old direction.
+    state = TranslationState.initial().copyWith(
+      sourceLanguage: source,
+      targetLanguage: target,
+      isModelReady: state.isModelReady,
+    );
+    _rememberLanguagePair();
+  }
+
   void swapLanguages() {
     // Don't reverse mid-recording: the clip already in progress belongs to the
     // old direction, and the model would be asked to translate it as the new
