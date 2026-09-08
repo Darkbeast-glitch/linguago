@@ -1,0 +1,8 @@
+release_notes.txt
+Example:
+Version 1.0.1
+
+What's new:
+- Added profile screen
+- Fixed login issue
+- Improved loading state
