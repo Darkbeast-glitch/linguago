@@ -32,7 +32,9 @@ class RecordingFailedException extends AppException {
 }
 
 class TranslationFailedException extends AppException {
-  const TranslationFailedException() : super('Translation failed. Please try again.');
+  const TranslationFailedException()
+      : super("Sorry, I didn't catch that. Try speaking again, "
+            'or type it in the box above.');
 }
 
 class TtsUnavailableException extends AppException {
@@ -41,5 +43,7 @@ class TtsUnavailableException extends AppException {
 }
 
 class EmptySpeechException extends AppException {
-  const EmptySpeechException() : super("We didn't catch that. Please try again.");
+  const EmptySpeechException()
+      : super("I couldn't hear anything. Try again a bit closer to the mic, "
+            'or type it in the box above.');
 }

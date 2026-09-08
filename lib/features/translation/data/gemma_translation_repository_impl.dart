@@ -76,11 +76,32 @@ class GemmaTranslationRepositoryImpl implements TranslationRepository {
         targetName: target.displayName,
       );
 
+      // The model sometimes transcribes the speech and stops, returning no
+      // translation — reproducible on fr->en. Rather than making the user
+      // repeat themselves, translate the text it did give us in a second
+      // pass. Costs about a second and turns a dead end into a result.
+      var translation = parsed.translation;
+      if (translation == null || translation.isEmpty) {
+        if (kDebugMode) {
+          debugPrint('[Linguago] audio pass returned no translation — '
+              'retrying as text');
+        }
+        final retry = await _gemma.translateText(
+          text: parsed.transcription,
+          source: source,
+          target: target,
+        );
+        translation = TranslationOutputParser.parseTranslationOnly(
+          retry,
+          targetName: target.displayName,
+        );
+      }
+
       return TranslationResult(
         sourceLanguage: source.code,
         targetLanguage: target.code,
         transcription: parsed.transcription,
-        translation: parsed.translation,
+        translation: translation,
         processingDurationMs: stopwatch.elapsedMilliseconds,
         createdAt: DateTime.now(),
       );

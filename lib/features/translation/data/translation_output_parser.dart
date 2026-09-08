@@ -31,12 +31,12 @@ abstract final class TranslationOutputParser {
   /// strip labels the model invents for itself — it frequently answers
   /// `English: ...` / `French: ...` instead of the labels it was asked for,
   /// and those names would otherwise end up inside the translated text.
-  static ({String transcription, String translation}) parse(
+  static ({String transcription, String? translation}) parse(
     String raw, {
     String? sourceName,
     String? targetName,
   }) {
-    final cleaned = _stripCodeFences(raw).trim();
+    final cleaned = _stripTurnMarkers(_stripCodeFences(raw)).trim();
     if (cleaned.isEmpty) {
       throw const EmptySpeechException();
     }
@@ -90,10 +90,28 @@ abstract final class TranslationOutputParser {
           translation: _stripLanguageLabel(lines[1], targetName),
         );
       }
+
+      // One line means the model transcribed the speech but skipped the
+      // translation — observed on fr->en, where it returned only
+      // "Puis si on nous a tous cette réforme débile". That is recoverable:
+      // the caller can translate this text in a second pass, which beats
+      // making the user say it again.
+      if (lines.length == 1) {
+        return (
+          transcription: _stripLanguageLabel(lines[0], sourceName),
+          translation: null,
+        );
+      }
     }
 
-    if (transcription == null || translation == null) {
+    if (transcription == null) {
       throw const TranslationFailedException();
+    }
+    if (translation == null) {
+      // Labelled transcription, no translation — same recoverable case as a
+      // single bare line.
+      if (transcription.isEmpty) throw const EmptySpeechException();
+      return (transcription: transcription, translation: null);
     }
     // A label the model emitted but left empty means it heard nothing.
     if (transcription.isEmpty || translation.isEmpty) {
@@ -154,6 +172,15 @@ abstract final class TranslationOutputParser {
 
   static String _join(String? existing, String line) =>
       existing == null || existing.isEmpty ? line.trim() : '$existing ${line.trim()}';
+
+  /// Removes Gemma's chat turn markers, which leak into the reply text —
+  /// observed as a bare `<start_of_turn>model` line. They are template
+  /// scaffolding, never content.
+  static String _stripTurnMarkers(String raw) {
+    return raw
+        .replaceAll(RegExp(r'<\s*/?\s*(start|end)_of_turn\s*>'), '')
+        .replaceAll(RegExp(r'^\s*(model|user)\s*$', multiLine: true), '');
+  }
 
   /// Drops ``` fences the model sometimes wraps structured replies in.
   static String _stripCodeFences(String raw) {

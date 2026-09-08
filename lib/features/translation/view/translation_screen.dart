@@ -117,7 +117,9 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                   },
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 12),
+              const _BetaNotice(),
+              const SizedBox(height: 12),
               _BottomToolbar(
                 status: state.status,
                 onMicPressed: () {
@@ -494,6 +496,38 @@ class _LanguageHalf extends StatelessWidget {
             ),
         ],
       ),
+    );
+  }
+}
+
+/// Sets expectations before a bad result does it for us.
+///
+/// Speech recognition misheard phrases often enough in testing that users
+/// would otherwise conclude the translation itself is poor. Saying so plainly,
+/// and pointing at the text box that avoids the problem entirely, is more
+/// honest than letting them discover it.
+class _BetaNotice extends StatelessWidget {
+  const _BetaNotice();
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Icon(Icons.info_outline_rounded, size: 14, color: AppColors.textGray),
+        const SizedBox(width: 6),
+        Expanded(
+          child: Text(
+            'Linguago is in beta and can mishear you. If the result looks '
+            'wrong, tap the text box above and type instead.',
+            style: TextStyle(
+              fontSize: 11.5,
+              height: 1.35,
+              color: AppColors.textGray.withValues(alpha: 0.9),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
