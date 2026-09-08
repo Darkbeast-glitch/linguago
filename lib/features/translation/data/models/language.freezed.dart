@@ -22,7 +22,10 @@ mixin _$Language {
 /// some of them.
  String? get flagAsset;/// Full locale handed to the offline TTS engine, e.g. "en-US". Platform
 /// speech engines match on region, so a bare "en" is not enough.
- String get ttsLocale; bool get supportsAsr; bool get supportsTts; bool get isEnabled;
+ String get ttsLocale;/// True for scripts written right-to-left. Arabic text rendered in a
+/// left-aligned box sits on the wrong side and reads as broken to anyone
+/// who uses the script.
+ bool get isRtl; bool get supportsAsr; bool get supportsTts; bool get isEnabled;
 /// Create a copy of Language
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -35,16 +38,16 @@ $LanguageCopyWith<Language> get copyWith => _$LanguageCopyWithImpl<Language>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Language&&(identical(other.code, code) || other.code == code)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.flagAsset, flagAsset) || other.flagAsset == flagAsset)&&(identical(other.ttsLocale, ttsLocale) || other.ttsLocale == ttsLocale)&&(identical(other.supportsAsr, supportsAsr) || other.supportsAsr == supportsAsr)&&(identical(other.supportsTts, supportsTts) || other.supportsTts == supportsTts)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Language&&(identical(other.code, code) || other.code == code)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.flagAsset, flagAsset) || other.flagAsset == flagAsset)&&(identical(other.ttsLocale, ttsLocale) || other.ttsLocale == ttsLocale)&&(identical(other.isRtl, isRtl) || other.isRtl == isRtl)&&(identical(other.supportsAsr, supportsAsr) || other.supportsAsr == supportsAsr)&&(identical(other.supportsTts, supportsTts) || other.supportsTts == supportsTts)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,displayName,flagAsset,ttsLocale,supportsAsr,supportsTts,isEnabled);
+int get hashCode => Object.hash(runtimeType,code,displayName,flagAsset,ttsLocale,isRtl,supportsAsr,supportsTts,isEnabled);
 
 @override
 String toString() {
-  return 'Language(code: $code, displayName: $displayName, flagAsset: $flagAsset, ttsLocale: $ttsLocale, supportsAsr: $supportsAsr, supportsTts: $supportsTts, isEnabled: $isEnabled)';
+  return 'Language(code: $code, displayName: $displayName, flagAsset: $flagAsset, ttsLocale: $ttsLocale, isRtl: $isRtl, supportsAsr: $supportsAsr, supportsTts: $supportsTts, isEnabled: $isEnabled)';
 }
 
 
@@ -55,7 +58,7 @@ abstract mixin class $LanguageCopyWith<$Res>  {
   factory $LanguageCopyWith(Language value, $Res Function(Language) _then) = _$LanguageCopyWithImpl;
 @useResult
 $Res call({
- String code, String displayName, String? flagAsset, String ttsLocale, bool supportsAsr, bool supportsTts, bool isEnabled
+ String code, String displayName, String? flagAsset, String ttsLocale, bool isRtl, bool supportsAsr, bool supportsTts, bool isEnabled
 });
 
 
@@ -72,13 +75,14 @@ class _$LanguageCopyWithImpl<$Res>
 
 /// Create a copy of Language
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? displayName = null,Object? flagAsset = freezed,Object? ttsLocale = null,Object? supportsAsr = null,Object? supportsTts = null,Object? isEnabled = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? code = null,Object? displayName = null,Object? flagAsset = freezed,Object? ttsLocale = null,Object? isRtl = null,Object? supportsAsr = null,Object? supportsTts = null,Object? isEnabled = null,}) {
   return _then(_self.copyWith(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,flagAsset: freezed == flagAsset ? _self.flagAsset : flagAsset // ignore: cast_nullable_to_non_nullable
 as String?,ttsLocale: null == ttsLocale ? _self.ttsLocale : ttsLocale // ignore: cast_nullable_to_non_nullable
-as String,supportsAsr: null == supportsAsr ? _self.supportsAsr : supportsAsr // ignore: cast_nullable_to_non_nullable
+as String,isRtl: null == isRtl ? _self.isRtl : isRtl // ignore: cast_nullable_to_non_nullable
+as bool,supportsAsr: null == supportsAsr ? _self.supportsAsr : supportsAsr // ignore: cast_nullable_to_non_nullable
 as bool,supportsTts: null == supportsTts ? _self.supportsTts : supportsTts // ignore: cast_nullable_to_non_nullable
 as bool,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,
@@ -166,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String displayName,  String? flagAsset,  String ttsLocale,  bool supportsAsr,  bool supportsTts,  bool isEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String code,  String displayName,  String? flagAsset,  String ttsLocale,  bool isRtl,  bool supportsAsr,  bool supportsTts,  bool isEnabled)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Language() when $default != null:
-return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_that.supportsAsr,_that.supportsTts,_that.isEnabled);case _:
+return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_that.isRtl,_that.supportsAsr,_that.supportsTts,_that.isEnabled);case _:
   return orElse();
 
 }
@@ -187,10 +191,10 @@ return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String displayName,  String? flagAsset,  String ttsLocale,  bool supportsAsr,  bool supportsTts,  bool isEnabled)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String code,  String displayName,  String? flagAsset,  String ttsLocale,  bool isRtl,  bool supportsAsr,  bool supportsTts,  bool isEnabled)  $default,) {final _that = this;
 switch (_that) {
 case _Language():
-return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_that.supportsAsr,_that.supportsTts,_that.isEnabled);case _:
+return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_that.isRtl,_that.supportsAsr,_that.supportsTts,_that.isEnabled);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +211,10 @@ return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String displayName,  String? flagAsset,  String ttsLocale,  bool supportsAsr,  bool supportsTts,  bool isEnabled)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String code,  String displayName,  String? flagAsset,  String ttsLocale,  bool isRtl,  bool supportsAsr,  bool supportsTts,  bool isEnabled)?  $default,) {final _that = this;
 switch (_that) {
 case _Language() when $default != null:
-return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_that.supportsAsr,_that.supportsTts,_that.isEnabled);case _:
+return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_that.isRtl,_that.supportsAsr,_that.supportsTts,_that.isEnabled);case _:
   return null;
 
 }
@@ -222,7 +226,7 @@ return $default(_that.code,_that.displayName,_that.flagAsset,_that.ttsLocale,_th
 @JsonSerializable()
 
 class _Language implements Language {
-  const _Language({required this.code, required this.displayName, this.flagAsset, required this.ttsLocale, this.supportsAsr = true, this.supportsTts = true, this.isEnabled = true});
+  const _Language({required this.code, required this.displayName, this.flagAsset, required this.ttsLocale, this.isRtl = false, this.supportsAsr = true, this.supportsTts = true, this.isEnabled = true});
   factory _Language.fromJson(Map<String, dynamic> json) => _$LanguageFromJson(json);
 
 /// BCP-47-ish language code, e.g. "en", "fr".
@@ -236,6 +240,10 @@ class _Language implements Language {
 /// Full locale handed to the offline TTS engine, e.g. "en-US". Platform
 /// speech engines match on region, so a bare "en" is not enough.
 @override final  String ttsLocale;
+/// True for scripts written right-to-left. Arabic text rendered in a
+/// left-aligned box sits on the wrong side and reads as broken to anyone
+/// who uses the script.
+@override@JsonKey() final  bool isRtl;
 @override@JsonKey() final  bool supportsAsr;
 @override@JsonKey() final  bool supportsTts;
 @override@JsonKey() final  bool isEnabled;
@@ -253,16 +261,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Language&&(identical(other.code, code) || other.code == code)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.flagAsset, flagAsset) || other.flagAsset == flagAsset)&&(identical(other.ttsLocale, ttsLocale) || other.ttsLocale == ttsLocale)&&(identical(other.supportsAsr, supportsAsr) || other.supportsAsr == supportsAsr)&&(identical(other.supportsTts, supportsTts) || other.supportsTts == supportsTts)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Language&&(identical(other.code, code) || other.code == code)&&(identical(other.displayName, displayName) || other.displayName == displayName)&&(identical(other.flagAsset, flagAsset) || other.flagAsset == flagAsset)&&(identical(other.ttsLocale, ttsLocale) || other.ttsLocale == ttsLocale)&&(identical(other.isRtl, isRtl) || other.isRtl == isRtl)&&(identical(other.supportsAsr, supportsAsr) || other.supportsAsr == supportsAsr)&&(identical(other.supportsTts, supportsTts) || other.supportsTts == supportsTts)&&(identical(other.isEnabled, isEnabled) || other.isEnabled == isEnabled));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,code,displayName,flagAsset,ttsLocale,supportsAsr,supportsTts,isEnabled);
+int get hashCode => Object.hash(runtimeType,code,displayName,flagAsset,ttsLocale,isRtl,supportsAsr,supportsTts,isEnabled);
 
 @override
 String toString() {
-  return 'Language(code: $code, displayName: $displayName, flagAsset: $flagAsset, ttsLocale: $ttsLocale, supportsAsr: $supportsAsr, supportsTts: $supportsTts, isEnabled: $isEnabled)';
+  return 'Language(code: $code, displayName: $displayName, flagAsset: $flagAsset, ttsLocale: $ttsLocale, isRtl: $isRtl, supportsAsr: $supportsAsr, supportsTts: $supportsTts, isEnabled: $isEnabled)';
 }
 
 
@@ -273,7 +281,7 @@ abstract mixin class _$LanguageCopyWith<$Res> implements $LanguageCopyWith<$Res>
   factory _$LanguageCopyWith(_Language value, $Res Function(_Language) _then) = __$LanguageCopyWithImpl;
 @override @useResult
 $Res call({
- String code, String displayName, String? flagAsset, String ttsLocale, bool supportsAsr, bool supportsTts, bool isEnabled
+ String code, String displayName, String? flagAsset, String ttsLocale, bool isRtl, bool supportsAsr, bool supportsTts, bool isEnabled
 });
 
 
@@ -290,13 +298,14 @@ class __$LanguageCopyWithImpl<$Res>
 
 /// Create a copy of Language
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? displayName = null,Object? flagAsset = freezed,Object? ttsLocale = null,Object? supportsAsr = null,Object? supportsTts = null,Object? isEnabled = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? code = null,Object? displayName = null,Object? flagAsset = freezed,Object? ttsLocale = null,Object? isRtl = null,Object? supportsAsr = null,Object? supportsTts = null,Object? isEnabled = null,}) {
   return _then(_Language(
 code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
 as String,displayName: null == displayName ? _self.displayName : displayName // ignore: cast_nullable_to_non_nullable
 as String,flagAsset: freezed == flagAsset ? _self.flagAsset : flagAsset // ignore: cast_nullable_to_non_nullable
 as String?,ttsLocale: null == ttsLocale ? _self.ttsLocale : ttsLocale // ignore: cast_nullable_to_non_nullable
-as String,supportsAsr: null == supportsAsr ? _self.supportsAsr : supportsAsr // ignore: cast_nullable_to_non_nullable
+as String,isRtl: null == isRtl ? _self.isRtl : isRtl // ignore: cast_nullable_to_non_nullable
+as bool,supportsAsr: null == supportsAsr ? _self.supportsAsr : supportsAsr // ignore: cast_nullable_to_non_nullable
 as bool,supportsTts: null == supportsTts ? _self.supportsTts : supportsTts // ignore: cast_nullable_to_non_nullable
 as bool,isEnabled: null == isEnabled ? _self.isEnabled : isEnabled // ignore: cast_nullable_to_non_nullable
 as bool,

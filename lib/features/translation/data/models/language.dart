@@ -24,6 +24,10 @@ abstract class Language with _$Language {
     /// Full locale handed to the offline TTS engine, e.g. "en-US". Platform
     /// speech engines match on region, so a bare "en" is not enough.
     required String ttsLocale,
+    /// True for scripts written right-to-left. Arabic text rendered in a
+    /// left-aligned box sits on the wrong side and reads as broken to anyone
+    /// who uses the script.
+    @Default(false) bool isRtl,
     @Default(true) bool supportsAsr,
     @Default(true) bool supportsTts,
     @Default(true) bool isEnabled,
@@ -105,15 +109,12 @@ abstract final class SupportedLanguages {
     ttsLocale: 'ru-RU',
   );
 
-  /// Right-to-left. Flutter renders the script correctly, but the translation
-  /// card is laid out left-aligned, so Arabic text sits on the wrong side.
-  /// Cosmetic, and worth fixing with a `Directionality` wrapper keyed to the
-  /// language.
   static const arabic = Language(
     code: 'ar',
     displayName: 'Arabic',
     flagAsset: 'assets/Images/arab.png',
     ttsLocale: 'ar-SA',
+    isRtl: true,
   );
 
   static const hindi = Language(

@@ -475,6 +475,11 @@ class _LanguageHalf extends StatelessWidget {
               // "Translate" rather than "done": pressing it is the action, so
               // the key should say what it does.
               textInputAction: TextInputAction.go,
+              // Each half follows its own language, not the app's locale, so
+              // Arabic typed into an English-language app still starts at the
+              // right edge.
+              textDirection: language.isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: language.isRtl ? TextAlign.right : TextAlign.left,
               style: const TextStyle(fontSize: 16, color: Colors.black87, height: 1.4),
               decoration: InputDecoration(
                 hintText: hintText,
@@ -492,6 +497,8 @@ class _LanguageHalf extends StatelessWidget {
           else
             Text(
               text,
+              textDirection: language.isRtl ? TextDirection.rtl : TextDirection.ltr,
+              textAlign: language.isRtl ? TextAlign.right : TextAlign.left,
               style: const TextStyle(fontSize: 16, color: Colors.black87, height: 1.4),
             ),
         ],
