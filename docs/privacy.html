@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy — Linguago</title>
+<meta name="description" content="Linguago translates speech on your device. Your voice and your translations never leave your phone.">
+<link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <a class="brand" href="./">
+    <div class="mark">LG</div>
+    <div>
+      <h1>Linguago</h1>
+      <p class="tag">Offline voice translation</p>
+    </div>
+  </a>
+</header>
+
+<h2 style="margin-top:28px">Privacy Policy</h2>
+<p class="updated">Last updated 9 September 2026</p>
+
+<p class="lead">Linguago translates speech using a model that runs on your
+device. Your voice and your translations stay on your phone.</p>
+
+<h2>What we collect</h2>
+<p><strong>Nothing.</strong> There is no account to create, no server to send
+data to, and no analytics, crash reporting, or advertising in the app.</p>
+<p>We cannot see your recordings, your translations, or how you use the app,
+because none of it is transmitted anywhere.</p>
+
+<h2>Your voice</h2>
+<p>When you tap the microphone:</p>
+<ul>
+  <li>Audio is recorded to a temporary file in the app's private storage.</li>
+  <li>That file is read once and passed to the translation model on your device.</li>
+  <li>The file is <strong>deleted immediately</strong> after it has been read.</li>
+</ul>
+<p>The recording is never uploaded, never backed up by the app, and never
+reused. If the app closes mid-recording, the partial file is discarded.</p>
+<p>Translation happens entirely on your phone using Google's Gemma model. The
+audio does not reach Google, us, or anyone else.</p>
+
+<h2>The one time the network is used</h2>
+<p>The translation model is about 2.6&nbsp;GB and cannot be bundled inside the
+app, so it is downloaded once when you first set the app up.</p>
+<p>That download connects to <strong>huggingface.co</strong>, where Google
+publishes the model. As with any download, Hugging Face and its CDN can see
+your IP address and that you requested the file. We receive nothing from this —
+the request goes directly from your phone to them.</p>
+<p>After the model is present, the app makes <strong>no network requests at
+all</strong> and works with the radio switched off.</p>
+
+<h2>Speech playback</h2>
+<div class="note">
+  <strong>Worth reading, because it is the one exception.</strong>
+  When you tap the speaker to hear a translation, Linguago hands the translated
+  <em>text</em> to your device's own speech engine.
+</div>
+<ul>
+  <li><strong>On iPhone and iPad</strong>, speech is synthesised on-device by
+      Apple's system voices. Nothing is transmitted.</li>
+  <li><strong>On Android</strong>, playback uses whichever text-to-speech engine
+      your device is set to use. Most speak offline once a voice is installed,
+      <strong>but some send text to their own servers</strong>. That behaviour
+      belongs to the engine you have selected, not to Linguago, and we cannot
+      control or observe it.</li>
+</ul>
+<p>To keep everything local on Android, install offline voice data for your
+language under <em>Settings → General management → Text-to-speech</em>, or turn
+off <em>Auto-play translated speech</em> in Linguago's settings so nothing is
+spoken unless you ask.</p>
+<p>We flag this because it is the only path by which translated text could leave
+your device, and it would be dishonest to describe the app as fully offline
+without saying so.</p>
+
+<h2>What is stored on your device</h2>
+<p>Small settings, saved locally and never transmitted:</p>
+<ul>
+  <li>Whether you have seen the welcome screen</li>
+  <li>Your chosen source and target languages</li>
+  <li>Which languages you have used recently</li>
+  <li>Whether translated speech plays automatically</li>
+  <li>The downloaded translation model</li>
+</ul>
+<p><strong>No transcriptions or translations are saved.</strong> Text disappears
+when you close the screen or start a new translation. There is no history
+feature. Deleting the app removes everything, including the model.</p>
+
+<h2>Permissions</h2>
+<table>
+  <tr><th>Permission</th><th>Why</th></tr>
+  <tr><td>Microphone</td><td>To hear the phrase you want translated. Used only while you are recording.</td></tr>
+  <tr><td>Internet</td><td>Only for the one-time model download described above.</td></tr>
+</table>
+
+<h2>Children</h2>
+<p>Linguago has no accounts, no social features, no advertising, and collects no
+data, so there is nothing to gather from a child or anyone else.</p>
+
+<h2>Changes</h2>
+<p>This policy is versioned alongside the source code, so any change can be
+inspected in the repository's history.</p>
+
+<h2>Contact</h2>
+<p>Questions or concerns:
+<a href="https://github.com/Darkbeast-glitch/linguago/issues">open an issue on GitHub</a>.</p>
+
+<footer>
+  Linguago is open source under the Apache&nbsp;2.0 licence —
+  <a href="https://github.com/Darkbeast-glitch/linguago">view the source</a>.
+</footer>
+
+</div>
+</body>
+</html>

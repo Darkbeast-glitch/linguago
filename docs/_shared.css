@@ -1,0 +1,61 @@
+/* Self-contained: no CDN fonts or scripts. A privacy page that phones home to
+   a font server would be a poor advert for an app whose whole claim is that
+   nothing leaves your device. */
+:root {
+  --navy: #0B1C3D;
+  --purple: #7C3AED;
+  --ink: #1A1A1A;
+  --muted: #6B7280;
+  --line: #E5E7EB;
+  --bg: #FFFFFF;
+  --card: #F9FAFB;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ink: #F3F4F6;
+    --muted: #9CA3AF;
+    --line: #2A2F3A;
+    --bg: #0F1115;
+    --card: #171A21;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+        Helvetica, Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+.wrap { max-width: 680px; margin: 0 auto; padding: 32px 20px 72px; }
+header { border-bottom: 1px solid var(--line); padding-bottom: 24px; margin-bottom: 8px; }
+.brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit; }
+.mark {
+  width: 40px; height: 40px; border-radius: 11px; background: var(--navy);
+  color: #F5D65B; font-weight: 800; font-size: 15px;
+  display: grid; place-items: center; letter-spacing: -0.5px; flex: none;
+}
+.brand h1 { font-size: 19px; margin: 0; letter-spacing: -0.2px; }
+.tag { color: var(--muted); font-size: 13.5px; margin: 4px 0 0; }
+h2 { font-size: 19px; margin: 34px 0 8px; letter-spacing: -0.2px; }
+p, li { color: var(--ink); }
+p { margin: 0 0 14px; }
+ul { padding-left: 22px; margin: 0 0 14px; }
+li { margin-bottom: 7px; }
+a { color: var(--purple); }
+.lead { font-size: 17.5px; }
+.updated { color: var(--muted); font-size: 13.5px; margin-top: 6px; }
+.note {
+  background: var(--card); border: 1px solid var(--line);
+  border-left: 3px solid #F59E0B;
+  border-radius: 10px; padding: 16px 18px; margin: 20px 0;
+}
+.note strong { display: block; margin-bottom: 6px; }
+table { width: 100%; border-collapse: collapse; margin: 6px 0 18px; font-size: 15px; }
+th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+th { color: var(--muted); font-weight: 600; font-size: 13px; text-transform: uppercase;
+     letter-spacing: 0.04em; }
+footer { margin-top: 48px; padding-top: 20px; border-top: 1px solid var(--line);
+         color: var(--muted); font-size: 13.5px; }
+code { background: var(--card); padding: 1px 5px; border-radius: 4px; font-size: 0.9em; }

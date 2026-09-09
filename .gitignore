@@ -16,7 +16,10 @@ migrate_working_dir/
 *.ipr
 *.iws
 .idea/
-docs/
+
+# NOTE: `docs/` is deliberately NOT ignored — it is the GitHub Pages source
+# (privacy policy URL for App Store Connect). Flutter's generated API docs are
+# covered separately by `**/doc/api/`.
 
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line

@@ -5,19 +5,30 @@
 	<!-- Required to load Gemma 4 E2B: a ~2.6 GB memory-mapped model.
 	     Resident memory is modest (~607 MB on CPU per Google's iPhone 17 Pro
 	     figures) — it is the size of the *virtual mapping* that needs
-	     extended-virtual-addressing. Without these, iOS is expected to kill
-	     the app when the weights are mapped.
+	     extended-virtual-addressing. Without these, iOS kills the app when the
+	     weights are mapped.
 
-	     These require a PAID Apple Developer account; a free Personal Team
+	     Both require a PAID Apple Developer account; a free Personal Team
 	     cannot sign them. If Xcode reports the provisioning profile doesn't
 	     include an entitlement, add the matching capability through
 	     Signing & Capabilities so it is registered on the App ID — editing
-	     this file alone does not register anything with Apple. -->
+	     this file alone does not register anything with Apple.
+
+	     DO NOT add com.apple.developer.kernel.increased-debugging-memory-limit
+	     here. flutter_gemma's README recommends it, but App Store Connect
+	     rejects the upload:
+
+	       ITMS-91087: Disallowed entitlement - The
+	       com.apple.developer.kernel.increased-debugging-memory-limit
+	       entitlement isn't permitted on the "Runner.app" bundle. This
+	       entitlement is only allowed on builds that use the TestFlight
+	       Internal Only distribution method.
+
+	     It only raises the ceiling for debug builds, so release builds lose
+	     nothing by omitting it — increased-memory-limit covers them. -->
 	<key>com.apple.developer.kernel.extended-virtual-addressing</key>
 	<true/>
 	<key>com.apple.developer.kernel.increased-memory-limit</key>
-	<true/>
-	<key>com.apple.developer.kernel.increased-debugging-memory-limit</key>
 	<true/>
 </dict>
 </plist>

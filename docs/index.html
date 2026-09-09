@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Linguago — Offline voice translation</title>
+<meta name="description" content="Speak a phrase, see it translated, hear it back — with the network switched off. No accounts, no servers. Your voice never leaves your phone.">
+<link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <a class="brand" href="./">
+    <div class="mark">LG</div>
+    <div>
+      <h1>Linguago</h1>
+      <p class="tag">Offline voice translation</p>
+    </div>
+  </a>
+</header>
+
+<p class="lead" style="margin-top:26px">Speak a phrase, see it translated, hear
+it back — with the network switched off. No accounts, no servers, no API keys.
+Your voice never leaves the device.</p>
+
+<p>Linguago runs Google's Gemma 4 model locally. It transcribes your speech and
+translates it in a single pass, so there is no cloud round-trip and nothing to
+intercept.</p>
+
+<h2>How it works</h2>
+<ul>
+  <li>Records 16&nbsp;kHz audio and hands it straight to an on-device model</li>
+  <li>Returns the transcription and translation together</li>
+  <li>Speaks the result using your phone's own voice engine</li>
+  <li>Deletes the recording as soon as it has been read</li>
+</ul>
+
+<h2>What it needs</h2>
+<table>
+  <tr><th>Requirement</th><th>Detail</th></tr>
+  <tr><td>Device memory</td><td>6&nbsp;GB or more</td></tr>
+  <tr><td>Storage</td><td>About 3&nbsp;GB for the model</td></tr>
+  <tr><td>First launch</td><td>One 2.6&nbsp;GB download, then fully offline</td></tr>
+</table>
+
+<div class="note">
+  <strong>In beta.</strong>
+  Speech recognition can mishear you, and translation quality varies by
+  language. If a result looks wrong, type the phrase instead — the text box
+  gives more reliable results than the microphone.
+</div>
+
+<h2>Links</h2>
+<ul>
+  <li><a href="privacy.html">Privacy policy</a></li>
+  <li><a href="https://github.com/Darkbeast-glitch/linguago">Source code on GitHub</a></li>
+  <li><a href="https://github.com/Darkbeast-glitch/linguago/issues">Report a problem</a></li>
+</ul>
+
+<footer>
+  Open source under the Apache&nbsp;2.0 licence. The Gemma model is distributed
+  by Google under Apache&nbsp;2.0 and downloaded at runtime rather than
+  redistributed here.
+</footer>
+
+</div>
+</body>
+</html>
