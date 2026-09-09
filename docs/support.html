@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Support — Linguago</title>
+<meta name="description" content="Help with Linguago: setup, the one-time model download, device requirements, voice playback and translation quality.">
+<link rel="stylesheet" href="_shared.css">
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <a class="brand" href="./">
+    <div class="mark">LG</div>
+    <div>
+      <h1>Linguago</h1>
+      <p class="tag">Offline voice translation</p>
+    </div>
+  </a>
+</header>
+
+<h2 style="margin-top:28px">Support</h2>
+
+<p class="lead">Most problems fall into one of the cases below. If yours
+doesn't, get in touch and we'll help.</p>
+
+<div class="note">
+  <strong>Contact</strong>
+  Report a bug or ask a question on
+  <a href="https://github.com/Darkbeast-glitch/linguago/issues">GitHub Issues</a>.
+  You'll usually get a reply within a couple of days. No account details or
+  personal information are ever needed — we can't see your usage, so please
+  describe what happened.
+</div>
+
+<h2>The download keeps failing or starting over</h2>
+<p>The one-time 2.6&nbsp;GB model download <strong>cannot resume</strong>. If
+the connection drops, it starts again from the beginning — that's a limitation
+of where the model is hosted, not a bug in the app.</p>
+<ul>
+  <li>Use Wi-Fi you can stay on, and keep the app open</li>
+  <li>Avoid switching networks partway through</li>
+  <li>If it fails, tap <em>Try again</em> — it will start cleanly</li>
+</ul>
+<p>Expect roughly 5 to 15 minutes on a decent connection.</p>
+
+<h2>"This device isn't supported"</h2>
+<p>The translation model needs about 6&nbsp;GB of device memory. On phones with
+less, it would load and then be killed by the system partway through a
+translation.</p>
+<p>Rather than let you spend 2.6&nbsp;GB of data to reach a crash, Linguago
+checks first and tells you. There is unfortunately no workaround — the model is
+simply too large for the device.</p>
+
+<h2>"Voice playback is unavailable for this language"</h2>
+<p>Linguago uses your phone's own speech engine to read translations aloud, and
+that engine needs voice data for the language installed.</p>
+<p><strong>On Android:</strong> Settings → General management → Text-to-speech →
+your engine → Install voice data → choose your language.</p>
+<p><strong>On iPhone:</strong> Settings → Accessibility → Spoken Content →
+Voices.</p>
+<p>The translated text is still correct and stays on screen — only the spoken
+playback is affected.</p>
+
+<h2>It mishears what I say</h2>
+<p>This is the most common complaint, and it's a real limitation. Speech
+recognition runs entirely on your phone, so it is less accurate than a service
+that sends your voice to a data centre. That's the trade for your voice never
+leaving the device.</p>
+<p>What helps:</p>
+<ul>
+  <li>Hold the phone closer and speak clearly</li>
+  <li>Find a quieter spot — background noise hurts accuracy a lot</li>
+  <li>Speak in complete sentences; short fragments give the model less to work with</li>
+  <li><strong>Tap the text box and type instead.</strong> Typing skips speech
+      recognition entirely and gives noticeably more accurate translations.</li>
+</ul>
+
+<h2>"Sorry, I didn't catch that"</h2>
+<p>The model heard something but couldn't produce a usable translation. Try
+speaking again, or type the phrase into the box — typing almost always works
+where speech didn't.</p>
+
+<h2>The translation looks wrong</h2>
+<p>Linguago is in beta. Translation quality varies between languages: English,
+French and Chinese have had the most testing, and the others less so.</p>
+<p>If a result is wrong, you can edit the transcription in the text box and
+translate again — often the speech was misheard rather than mistranslated.</p>
+
+<h2>Where is my data?</h2>
+<p>On your phone, and nowhere else. Recordings are deleted as soon as they've
+been read, nothing is uploaded, and there is no account or server. See the
+<a href="privacy.html">privacy policy</a> for the full detail, including the one
+exception worth knowing about.</p>
+
+<h2>How do I remove everything?</h2>
+<p>Delete the app. That removes the model, your settings and everything else.
+Nothing is left behind on any server, because nothing was ever sent to one.</p>
+
+<footer>
+  Linguago is open source under the Apache&nbsp;2.0 licence —
+  <a href="https://github.com/Darkbeast-glitch/linguago">view the source</a> ·
+  <a href="privacy.html">Privacy</a>
+</footer>
+
+</div>
+</body>
+</html>
