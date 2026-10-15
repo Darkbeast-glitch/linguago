@@ -3,10 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import '../../../../core/errors/app_exception.dart';
+import '../../../../core/storage/app_preferences.dart';
 import '../models/language.dart';
+import '../models/tts_voice.dart';
 
 final ttsDataSourceProvider = Provider<TtsDataSource>((ref) {
-  final dataSource = TtsDataSource();
+  final dataSource = TtsDataSource(
+    preferences: ref.watch(appPreferencesProvider),
+  );
   ref.onDispose(dataSource.dispose);
   return dataSource;
 });
@@ -19,9 +23,11 @@ final ttsDataSourceProvider = Provider<TtsDataSource>((ref) {
 /// explicit that a missing voice is a *capability gap to surface*, not a
 /// reason to reach for the network.
 class TtsDataSource {
-  TtsDataSource({FlutterTts? tts}) : _tts = tts ?? FlutterTts();
+  TtsDataSource({required this.preferences, FlutterTts? tts})
+    : _tts = tts ?? FlutterTts();
 
   final FlutterTts _tts;
+  final AppPreferences preferences;
   bool _configured = false;
 
   Future<void> _configure() async {
@@ -32,39 +38,43 @@ class TtsDataSource {
     _configured = true;
   }
 
-  /// Whether a voice for [language] is usable offline.
-  ///
-  /// Checks `isLanguageInstalled` first — that's the strict "voice data is on
-  /// this device" answer — but falls back to `isLanguageAvailable`, because
-  /// engines disagree about the first one: Samsung's and Google's return false
-  /// for locales they can nonetheless speak, which would wrongly deny playback.
-  /// Preferring a real attempt over a pessimistic gate matters here, since the
-  /// failure mode of guessing wrong is silently refusing a working voice.
+  /// Whether a local voice for [language] is available.
   Future<bool> isAvailable(Language language) async {
-    if (!language.supportsTts) return false;
-
-    // Each probe is guarded separately, and deliberately so: iOS does not
-    // implement `isLanguageInstalled` at all — there is no handler for it in
-    // SwiftFlutterTtsPlugin — so it throws MissingPluginException there. A
-    // single try/catch around both would swallow that and return false,
-    // silently making speech permanently "unavailable" on every iPhone even
-    // when a perfectly good voice exists.
-    if (await _probe(() => _tts.isLanguageInstalled(language.ttsLocale))) {
-      return true;
-    }
-    // The broader check, and the only one iOS answers. On Android it can be
-    // true for a voice that still needs downloading — attempting playback and
-    // reporting a real failure beats refusing up front.
-    return _probe(() => _tts.isLanguageAvailable(language.ttsLocale));
+    return (await availableVoices(language)).isNotEmpty;
   }
 
-  /// Runs one platform check, treating "not implemented here" as "no answer"
-  /// rather than as "no".
-  Future<bool> _probe(Future<dynamic> Function() check) async {
+  /// Lists local voices matching [language]. Android reports network-dependent
+  /// voices alongside local ones, so those are excluded before they reach UI.
+  Future<List<TtsVoice>> availableVoices(Language language) async {
+    if (!language.supportsTts) return const [];
+
     try {
-      return await check() == true;
+      final voices = await _tts.getVoices;
+      if (voices is! List) return const [];
+
+      final result = <TtsVoice>[];
+      for (final value in voices) {
+        if (value is! Map) continue;
+        final networkRequired = value['network_required'];
+        final requiresNetwork =
+            '$networkRequired' == '1' ||
+            '$networkRequired'.toLowerCase() == 'true';
+        if (requiresNetwork) continue;
+
+        try {
+          final voice = TtsVoice.fromPlatformMap(value);
+          final localeLanguage = voice.locale.split('-').first.toLowerCase();
+          if (localeLanguage == language.code.toLowerCase()) {
+            result.add(voice);
+          }
+        } on TypeError {
+          continue;
+        }
+      }
+      result.sort((a, b) => a.name.compareTo(b.name));
+      return result;
     } catch (_) {
-      return false;
+      throw const TtsUnavailableException();
     }
   }
 
@@ -89,7 +99,9 @@ class TtsDataSource {
     await probe(_configure);
     final languages = await probe(() async => _tts.getLanguages);
     final matching = languages is List
-        ? languages.where((l) => '$l'.toLowerCase().startsWith(language.code)).toList()
+        ? languages
+              .where((l) => '$l'.toLowerCase().startsWith(language.code))
+              .toList()
         : languages;
 
     debugPrint(
@@ -109,23 +121,37 @@ class TtsDataSource {
     if (text.trim().isEmpty) return;
 
     await _configure();
-
-    if (!await isAvailable(language)) {
+    final voices = await availableVoices(language);
+    if (voices.isEmpty) {
       await debugDumpVoices(language);
       throw const TtsUnavailableException();
     }
 
     try {
-      await _tts.setLanguage(language.ttsLocale);
-      // Slightly under the default: translated phrases are often unfamiliar to
-      // the listener, and the platform default reads them too fast to follow.
-      await _tts.setSpeechRate(0.45);
+      final selectedVoiceId = preferences.speechVoiceId(language.code);
+      final voice = selectedVoiceId == null
+          ? voices.first
+          : _findVoice(voices, selectedVoiceId);
+      if (voice == null) throw const TtsUnavailableException();
+
+      final voiceApplied = await _tts.setVoice(voice.toPlatformMap());
+      if (voiceApplied == 0 || voiceApplied == false) {
+        throw const TtsUnavailableException();
+      }
+      await _tts.setSpeechRate(preferences.speechRate);
       await _tts.speak(text);
     } on TtsUnavailableException {
       rethrow;
     } catch (_) {
       throw const TtsUnavailableException();
     }
+  }
+
+  TtsVoice? _findVoice(List<TtsVoice> voices, String voiceId) {
+    for (final voice in voices) {
+      if (voice.id == voiceId) return voice;
+    }
+    return null;
   }
 
   Future<void> stop() async {

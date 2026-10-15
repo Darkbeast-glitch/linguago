@@ -7,23 +7,10 @@ import '../../../core/constants/app_constants.dart';
 import '../../../core/errors/app_exception.dart';
 import '../../home/viewmodel/home_viewmodel.dart';
 import '../../settings/viewmodel/settings_viewmodel.dart';
-import '../data/datasources/audio_datasource.dart';
-import '../data/datasources/gemma_datasource.dart';
-import '../data/datasources/tts_datasource.dart';
-import '../data/gemma_translation_repository_impl.dart';
 import '../data/models/language.dart';
 import '../data/translation_repository.dart';
+import '../data/translation_repository_provider.dart';
 import 'translation_state.dart';
-
-/// The real microphone + on-device Gemma pipeline. Tests override this with a
-/// fake; nothing above the repository changes either way (PRD §14).
-final translationRepositoryProvider = Provider<TranslationRepository>((ref) {
-  return GemmaTranslationRepositoryImpl(
-    ref.watch(audioDataSourceProvider),
-    ref.watch(gemmaDataSourceProvider),
-    ref.watch(ttsDataSourceProvider),
-  );
-});
 
 final translationViewModelProvider =
     NotifierProvider<TranslationViewModel, TranslationState>(TranslationViewModel.new);
@@ -67,10 +54,7 @@ class TranslationViewModel extends Notifier<TranslationState> {
       await _repository.initialize();
       state = state.copyWith(isModelReady: true);
     } on AppException catch (e) {
-      state = state.copyWith(
-        status: TranslationStatus.error,
-        errorMessage: e.message,
-      );
+      state = state.copyWith(status: TranslationStatus.error, errorMessage: e.message);
     }
   }
 
@@ -244,7 +228,10 @@ class TranslationViewModel extends Notifier<TranslationState> {
         await speakTranslation();
       }
     } on AppException catch (e) {
-      state = state.copyWith(status: TranslationStatus.error, errorMessage: e.message);
+      state = state.copyWith(
+        status: TranslationStatus.error,
+        errorMessage: e.message,
+      );
     }
   }
 

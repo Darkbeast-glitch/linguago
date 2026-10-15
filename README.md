@@ -235,6 +235,9 @@ spending 2.6 GB of someone's bandwidth to reach a crash helps nobody.
 **Text-to-speech depends on installed voices.** A missing voice is surfaced as a
 capability gap — the translation stays on screen with an explanation. There is
 deliberately **no cloud fallback**; that would break the offline guarantee.
+In Settings, choose among voices already available on the device and adjust
+speech speed. Android voices that require a network connection are excluded;
+voice previews use the same offline-only path as translation playback.
 
 **Backend choice is platform-specific and counterintuitive.** Google's E2B
 figures:

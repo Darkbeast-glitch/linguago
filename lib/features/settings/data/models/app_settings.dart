@@ -11,6 +11,8 @@ abstract class AppSettings with _$AppSettings {
     @Default('en') String preferredSourceLanguageCode,
     @Default('fr') String preferredTargetLanguageCode,
     @Default(true) bool autoPlayTranslatedSpeech,
+    @Default(0.45) double speechRate,
+    @Default({}) Map<String, String> speechVoiceIdsByLanguageCode,
   }) = _AppSettings;
 
   factory AppSettings.fromJson(Map<String, dynamic> json) =>

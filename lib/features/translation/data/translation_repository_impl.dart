@@ -1,5 +1,6 @@
 import 'models/language.dart';
 import 'models/translation_result.dart';
+import 'models/tts_voice.dart';
 import 'translation_repository.dart';
 
 /// Milestone-1 stand-in for [TranslationRepository].
@@ -62,6 +63,9 @@ class FakeTranslationRepositoryImpl implements TranslationRepository {
   Future<void> speak(String text, Language language) async {
     await Future<void>.delayed(const Duration(milliseconds: 200));
   }
+
+  @override
+  Future<List<TtsVoice>> availableVoices(Language language) async => const [];
 
   @override
   Future<void> stopSpeaking() async {}

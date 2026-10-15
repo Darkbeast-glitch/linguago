@@ -6,6 +6,7 @@ import 'datasources/gemma_datasource.dart';
 import 'datasources/tts_datasource.dart';
 import 'models/language.dart';
 import 'models/translation_result.dart';
+import 'models/tts_voice.dart';
 import 'translation_output_parser.dart';
 import 'translation_repository.dart';
 
@@ -171,7 +172,12 @@ class GemmaTranslationRepositoryImpl implements TranslationRepository {
   }
 
   @override
-  Future<void> speak(String text, Language language) => _tts.speak(text, language);
+  Future<void> speak(String text, Language language) =>
+      _tts.speak(text, language);
+
+  @override
+  Future<List<TtsVoice>> availableVoices(Language language) =>
+      _tts.availableVoices(language);
 
   @override
   Future<void> stopSpeaking() => _tts.stop();

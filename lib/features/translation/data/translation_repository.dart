@@ -1,5 +1,6 @@
 import 'models/language.dart';
 import 'models/translation_result.dart';
+import 'models/tts_voice.dart';
 
 /// The clean-application-operations contract the ViewModel depends on
 /// (PRD §14, §18). Hides whether the implementation behind it is fake data
@@ -30,6 +31,9 @@ abstract class TranslationRepository {
 
   /// Speaks [text] using an offline TTS voice for [language].
   Future<void> speak(String text, Language language);
+
+  /// Lists voices for [language] that are available without a network.
+  Future<List<TtsVoice>> availableVoices(Language language);
 
   /// Stops any in-progress offline speech playback.
   Future<void> stopSpeaking();

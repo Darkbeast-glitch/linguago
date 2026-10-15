@@ -26,8 +26,12 @@ class AppPreferences {
 
   static const _kHasSeenGetStarted = 'has_seen_get_started';
   static const _kAutoPlaySpeech = 'auto_play_translated_speech';
+  static const _kSpeechRate = 'speech_rate';
   static const _kSourceLanguage = 'preferred_source_language';
   static const _kTargetLanguage = 'preferred_target_language';
+  static const defaultSpeechRate = 0.45;
+  static const minSpeechRate = 0.25;
+  static const maxSpeechRate = 0.75;
 
   bool get hasSeenGetStarted => _prefs.getBool(_kHasSeenGetStarted) ?? false;
 
@@ -39,11 +43,38 @@ class AppPreferences {
   Future<void> setAutoPlayTranslatedSpeech(bool value) =>
       _prefs.setBool(_kAutoPlaySpeech, value);
 
+  double get speechRate => (_prefs.getDouble(_kSpeechRate) ?? defaultSpeechRate)
+      .clamp(minSpeechRate, maxSpeechRate)
+      .toDouble();
+
+  Future<void> setSpeechRate(double value) => _prefs.setDouble(
+    _kSpeechRate,
+    value.clamp(minSpeechRate, maxSpeechRate).toDouble(),
+  );
+
+  String? speechVoiceId(String languageCode) =>
+      _prefs.getString('speech_voice_$languageCode');
+
+  Future<void> setSpeechVoiceId({
+    required String languageCode,
+    required String? voiceId,
+  }) async {
+    final key = 'speech_voice_$languageCode';
+    if (voiceId == null) {
+      await _prefs.remove(key);
+    } else {
+      await _prefs.setString(key, voiceId);
+    }
+  }
+
   String get sourceLanguageCode => _prefs.getString(_kSourceLanguage) ?? 'en';
 
   String get targetLanguageCode => _prefs.getString(_kTargetLanguage) ?? 'fr';
 
-  Future<void> setLanguagePair({required String source, required String target}) async {
+  Future<void> setLanguagePair({
+    required String source,
+    required String target,
+  }) async {
     await _prefs.setString(_kSourceLanguage, source);
     await _prefs.setString(_kTargetLanguage, target);
   }

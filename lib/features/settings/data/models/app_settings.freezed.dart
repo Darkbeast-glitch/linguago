@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppSettings {
 
- String get preferredSourceLanguageCode; String get preferredTargetLanguageCode; bool get autoPlayTranslatedSpeech;
+ String get preferredSourceLanguageCode; String get preferredTargetLanguageCode; bool get autoPlayTranslatedSpeech; double get speechRate; Map<String, String> get speechVoiceIdsByLanguageCode;
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $AppSettingsCopyWith<AppSettings> get copyWith => _$AppSettingsCopyWithImpl<AppS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.preferredSourceLanguageCode, preferredSourceLanguageCode) || other.preferredSourceLanguageCode == preferredSourceLanguageCode)&&(identical(other.preferredTargetLanguageCode, preferredTargetLanguageCode) || other.preferredTargetLanguageCode == preferredTargetLanguageCode)&&(identical(other.autoPlayTranslatedSpeech, autoPlayTranslatedSpeech) || other.autoPlayTranslatedSpeech == autoPlayTranslatedSpeech));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AppSettings&&(identical(other.preferredSourceLanguageCode, preferredSourceLanguageCode) || other.preferredSourceLanguageCode == preferredSourceLanguageCode)&&(identical(other.preferredTargetLanguageCode, preferredTargetLanguageCode) || other.preferredTargetLanguageCode == preferredTargetLanguageCode)&&(identical(other.autoPlayTranslatedSpeech, autoPlayTranslatedSpeech) || other.autoPlayTranslatedSpeech == autoPlayTranslatedSpeech)&&(identical(other.speechRate, speechRate) || other.speechRate == speechRate)&&const DeepCollectionEquality().equals(other.speechVoiceIdsByLanguageCode, speechVoiceIdsByLanguageCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,preferredSourceLanguageCode,preferredTargetLanguageCode,autoPlayTranslatedSpeech);
+int get hashCode => Object.hash(runtimeType,preferredSourceLanguageCode,preferredTargetLanguageCode,autoPlayTranslatedSpeech,speechRate,const DeepCollectionEquality().hash(speechVoiceIdsByLanguageCode));
 
 @override
 String toString() {
-  return 'AppSettings(preferredSourceLanguageCode: $preferredSourceLanguageCode, preferredTargetLanguageCode: $preferredTargetLanguageCode, autoPlayTranslatedSpeech: $autoPlayTranslatedSpeech)';
+  return 'AppSettings(preferredSourceLanguageCode: $preferredSourceLanguageCode, preferredTargetLanguageCode: $preferredTargetLanguageCode, autoPlayTranslatedSpeech: $autoPlayTranslatedSpeech, speechRate: $speechRate, speechVoiceIdsByLanguageCode: $speechVoiceIdsByLanguageCode)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $AppSettingsCopyWith<$Res>  {
   factory $AppSettingsCopyWith(AppSettings value, $Res Function(AppSettings) _then) = _$AppSettingsCopyWithImpl;
 @useResult
 $Res call({
- String preferredSourceLanguageCode, String preferredTargetLanguageCode, bool autoPlayTranslatedSpeech
+ String preferredSourceLanguageCode, String preferredTargetLanguageCode, bool autoPlayTranslatedSpeech, double speechRate, Map<String, String> speechVoiceIdsByLanguageCode
 });
 
 
@@ -65,12 +65,14 @@ class _$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? preferredSourceLanguageCode = null,Object? preferredTargetLanguageCode = null,Object? autoPlayTranslatedSpeech = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? preferredSourceLanguageCode = null,Object? preferredTargetLanguageCode = null,Object? autoPlayTranslatedSpeech = null,Object? speechRate = null,Object? speechVoiceIdsByLanguageCode = null,}) {
   return _then(_self.copyWith(
 preferredSourceLanguageCode: null == preferredSourceLanguageCode ? _self.preferredSourceLanguageCode : preferredSourceLanguageCode // ignore: cast_nullable_to_non_nullable
 as String,preferredTargetLanguageCode: null == preferredTargetLanguageCode ? _self.preferredTargetLanguageCode : preferredTargetLanguageCode // ignore: cast_nullable_to_non_nullable
 as String,autoPlayTranslatedSpeech: null == autoPlayTranslatedSpeech ? _self.autoPlayTranslatedSpeech : autoPlayTranslatedSpeech // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,speechRate: null == speechRate ? _self.speechRate : speechRate // ignore: cast_nullable_to_non_nullable
+as double,speechVoiceIdsByLanguageCode: null == speechVoiceIdsByLanguageCode ? _self.speechVoiceIdsByLanguageCode : speechVoiceIdsByLanguageCode // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,
   ));
 }
 
@@ -155,10 +157,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech,  double speechRate,  Map<String, String> speechVoiceIdsByLanguageCode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _AppSettings() when $default != null:
-return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech);case _:
+return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech,_that.speechRate,_that.speechVoiceIdsByLanguageCode);case _:
   return orElse();
 
 }
@@ -176,10 +178,10 @@ return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageC
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech,  double speechRate,  Map<String, String> speechVoiceIdsByLanguageCode)  $default,) {final _that = this;
 switch (_that) {
 case _AppSettings():
-return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech);case _:
+return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech,_that.speechRate,_that.speechVoiceIdsByLanguageCode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +198,10 @@ return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageC
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String preferredSourceLanguageCode,  String preferredTargetLanguageCode,  bool autoPlayTranslatedSpeech,  double speechRate,  Map<String, String> speechVoiceIdsByLanguageCode)?  $default,) {final _that = this;
 switch (_that) {
 case _AppSettings() when $default != null:
-return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech);case _:
+return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageCode,_that.autoPlayTranslatedSpeech,_that.speechRate,_that.speechVoiceIdsByLanguageCode);case _:
   return null;
 
 }
@@ -211,12 +213,20 @@ return $default(_that.preferredSourceLanguageCode,_that.preferredTargetLanguageC
 @JsonSerializable()
 
 class _AppSettings implements AppSettings {
-  const _AppSettings({this.preferredSourceLanguageCode = 'en', this.preferredTargetLanguageCode = 'fr', this.autoPlayTranslatedSpeech = true});
+  const _AppSettings({this.preferredSourceLanguageCode = 'en', this.preferredTargetLanguageCode = 'fr', this.autoPlayTranslatedSpeech = true, this.speechRate = 0.45, final  Map<String, String> speechVoiceIdsByLanguageCode = const {}}): _speechVoiceIdsByLanguageCode = speechVoiceIdsByLanguageCode;
   factory _AppSettings.fromJson(Map<String, dynamic> json) => _$AppSettingsFromJson(json);
 
 @override@JsonKey() final  String preferredSourceLanguageCode;
 @override@JsonKey() final  String preferredTargetLanguageCode;
 @override@JsonKey() final  bool autoPlayTranslatedSpeech;
+@override@JsonKey() final  double speechRate;
+ final  Map<String, String> _speechVoiceIdsByLanguageCode;
+@override@JsonKey() Map<String, String> get speechVoiceIdsByLanguageCode {
+  if (_speechVoiceIdsByLanguageCode is EqualUnmodifiableMapView) return _speechVoiceIdsByLanguageCode;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_speechVoiceIdsByLanguageCode);
+}
+
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
@@ -231,16 +241,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.preferredSourceLanguageCode, preferredSourceLanguageCode) || other.preferredSourceLanguageCode == preferredSourceLanguageCode)&&(identical(other.preferredTargetLanguageCode, preferredTargetLanguageCode) || other.preferredTargetLanguageCode == preferredTargetLanguageCode)&&(identical(other.autoPlayTranslatedSpeech, autoPlayTranslatedSpeech) || other.autoPlayTranslatedSpeech == autoPlayTranslatedSpeech));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AppSettings&&(identical(other.preferredSourceLanguageCode, preferredSourceLanguageCode) || other.preferredSourceLanguageCode == preferredSourceLanguageCode)&&(identical(other.preferredTargetLanguageCode, preferredTargetLanguageCode) || other.preferredTargetLanguageCode == preferredTargetLanguageCode)&&(identical(other.autoPlayTranslatedSpeech, autoPlayTranslatedSpeech) || other.autoPlayTranslatedSpeech == autoPlayTranslatedSpeech)&&(identical(other.speechRate, speechRate) || other.speechRate == speechRate)&&const DeepCollectionEquality().equals(other._speechVoiceIdsByLanguageCode, _speechVoiceIdsByLanguageCode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,preferredSourceLanguageCode,preferredTargetLanguageCode,autoPlayTranslatedSpeech);
+int get hashCode => Object.hash(runtimeType,preferredSourceLanguageCode,preferredTargetLanguageCode,autoPlayTranslatedSpeech,speechRate,const DeepCollectionEquality().hash(_speechVoiceIdsByLanguageCode));
 
 @override
 String toString() {
-  return 'AppSettings(preferredSourceLanguageCode: $preferredSourceLanguageCode, preferredTargetLanguageCode: $preferredTargetLanguageCode, autoPlayTranslatedSpeech: $autoPlayTranslatedSpeech)';
+  return 'AppSettings(preferredSourceLanguageCode: $preferredSourceLanguageCode, preferredTargetLanguageCode: $preferredTargetLanguageCode, autoPlayTranslatedSpeech: $autoPlayTranslatedSpeech, speechRate: $speechRate, speechVoiceIdsByLanguageCode: $speechVoiceIdsByLanguageCode)';
 }
 
 
@@ -251,7 +261,7 @@ abstract mixin class _$AppSettingsCopyWith<$Res> implements $AppSettingsCopyWith
   factory _$AppSettingsCopyWith(_AppSettings value, $Res Function(_AppSettings) _then) = __$AppSettingsCopyWithImpl;
 @override @useResult
 $Res call({
- String preferredSourceLanguageCode, String preferredTargetLanguageCode, bool autoPlayTranslatedSpeech
+ String preferredSourceLanguageCode, String preferredTargetLanguageCode, bool autoPlayTranslatedSpeech, double speechRate, Map<String, String> speechVoiceIdsByLanguageCode
 });
 
 
@@ -268,12 +278,14 @@ class __$AppSettingsCopyWithImpl<$Res>
 
 /// Create a copy of AppSettings
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? preferredSourceLanguageCode = null,Object? preferredTargetLanguageCode = null,Object? autoPlayTranslatedSpeech = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? preferredSourceLanguageCode = null,Object? preferredTargetLanguageCode = null,Object? autoPlayTranslatedSpeech = null,Object? speechRate = null,Object? speechVoiceIdsByLanguageCode = null,}) {
   return _then(_AppSettings(
 preferredSourceLanguageCode: null == preferredSourceLanguageCode ? _self.preferredSourceLanguageCode : preferredSourceLanguageCode // ignore: cast_nullable_to_non_nullable
 as String,preferredTargetLanguageCode: null == preferredTargetLanguageCode ? _self.preferredTargetLanguageCode : preferredTargetLanguageCode // ignore: cast_nullable_to_non_nullable
 as String,autoPlayTranslatedSpeech: null == autoPlayTranslatedSpeech ? _self.autoPlayTranslatedSpeech : autoPlayTranslatedSpeech // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,speechRate: null == speechRate ? _self.speechRate : speechRate // ignore: cast_nullable_to_non_nullable
+as double,speechVoiceIdsByLanguageCode: null == speechVoiceIdsByLanguageCode ? _self._speechVoiceIdsByLanguageCode : speechVoiceIdsByLanguageCode // ignore: cast_nullable_to_non_nullable
+as Map<String, String>,
   ));
 }
 

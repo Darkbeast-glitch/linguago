@@ -12,6 +12,12 @@ _AppSettings _$AppSettingsFromJson(Map<String, dynamic> json) => _AppSettings(
   preferredTargetLanguageCode:
       json['preferredTargetLanguageCode'] as String? ?? 'fr',
   autoPlayTranslatedSpeech: json['autoPlayTranslatedSpeech'] as bool? ?? true,
+  speechRate: (json['speechRate'] as num?)?.toDouble() ?? 0.45,
+  speechVoiceIdsByLanguageCode:
+      (json['speechVoiceIdsByLanguageCode'] as Map<String, dynamic>?)?.map(
+        (k, e) => MapEntry(k, e as String),
+      ) ??
+      const {},
 );
 
 Map<String, dynamic> _$AppSettingsToJson(_AppSettings instance) =>
@@ -19,4 +25,6 @@ Map<String, dynamic> _$AppSettingsToJson(_AppSettings instance) =>
       'preferredSourceLanguageCode': instance.preferredSourceLanguageCode,
       'preferredTargetLanguageCode': instance.preferredTargetLanguageCode,
       'autoPlayTranslatedSpeech': instance.autoPlayTranslatedSpeech,
+      'speechRate': instance.speechRate,
+      'speechVoiceIdsByLanguageCode': instance.speechVoiceIdsByLanguageCode,
     };

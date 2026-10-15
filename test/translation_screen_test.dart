@@ -6,7 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:linguago/core/storage/app_preferences.dart';
 import 'package:linguago/features/translation/data/models/language.dart';
 import 'package:linguago/features/translation/data/models/translation_result.dart';
+import 'package:linguago/features/translation/data/models/tts_voice.dart';
 import 'package:linguago/features/translation/data/translation_repository.dart';
+import 'package:linguago/features/translation/data/translation_repository_provider.dart';
 import 'package:linguago/features/translation/view/translation_screen.dart';
 import 'package:linguago/features/translation/viewmodel/translation_viewmodel.dart';
 
@@ -53,16 +55,19 @@ class _FakeRepository implements TranslationRepository {
   Future<void> speak(String text, Language language) async {}
 
   @override
+  Future<List<TtsVoice>> availableVoices(Language language) async => const [];
+
+  @override
   Future<void> stopSpeaking() async {}
 }
 
 Widget _screen(SharedPreferences preferences) => ProviderScope(
-      overrides: [
-        sharedPreferencesProvider.overrideWithValue(preferences),
-        translationRepositoryProvider.overrideWithValue(_FakeRepository()),
-      ],
-      child: const MaterialApp(home: TranslationScreen()),
-    );
+  overrides: [
+    sharedPreferencesProvider.overrideWithValue(preferences),
+    translationRepositoryProvider.overrideWithValue(_FakeRepository()),
+  ],
+  child: const MaterialApp(home: TranslationScreen()),
+);
 
 Future<SharedPreferences> _prefs() async {
   SharedPreferences.setMockInitialValues({});
@@ -83,8 +88,14 @@ void main() {
       tester.element(find.byType(TranslationScreen)),
     );
 
-    expect(container.read(translationViewModelProvider).sourceLanguage.code, 'en');
-    expect(container.read(translationViewModelProvider).targetLanguage.code, 'fr');
+    expect(
+      container.read(translationViewModelProvider).sourceLanguage.code,
+      'en',
+    );
+    expect(
+      container.read(translationViewModelProvider).targetLanguage.code,
+      'fr',
+    );
 
     await tester.tap(find.byIcon(Icons.sync_alt_rounded));
     await tester.pump();
@@ -94,11 +105,15 @@ void main() {
       'fr',
       reason: 'tapping swap should make French the source',
     );
-    expect(container.read(translationViewModelProvider).targetLanguage.code, 'en');
+    expect(
+      container.read(translationViewModelProvider).targetLanguage.code,
+      'en',
+    );
   });
 
-  testWidgets('setLanguagePair sets both halves, even when reversed',
-      (tester) async {
+  testWidgets('setLanguagePair sets both halves, even when reversed', (
+    tester,
+  ) async {
     tester.view.devicePixelRatio = 3.0;
     tester.view.physicalSize = const Size(390, 844) * 3.0;
     addTearDown(tester.view.resetDevicePixelRatio);
