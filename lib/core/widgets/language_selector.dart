@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../app/app_theme.dart';
@@ -27,16 +29,64 @@ class LanguageSelector extends StatelessWidget {
   final Language? unavailable;
 
   Future<void> _pick(BuildContext context) async {
-    final picked = await showModalBottomSheet<Language>(
+    if (defaultTargetPlatform == TargetPlatform.iOS) {
+      await _pickIOS(context);
+    } else {
+      final picked = await showModalBottomSheet<Language>(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (_) => _LanguagePickerSheet(
+          selected: selected,
+          unavailable: unavailable,
+        ),
+      );
+      if (picked != null) onChanged(picked);
+    }
+  }
+
+  /// iOS-native picker: CupertinoActionSheet with a scrollable list of
+  /// languages — mirrors how system pickers (e.g. date picker) behave on iOS.
+  Future<void> _pickIOS(BuildContext context) async {
+    final available = SupportedLanguages.all
+        .where((l) => l.isEnabled && l.code != unavailable?.code)
+        .toList();
+
+    await showCupertinoModalPopup<void>(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (_) => _LanguagePickerSheet(
-        selected: selected,
-        unavailable: unavailable,
+      builder: (ctx) => CupertinoActionSheet(
+        title: const Text('Choose a language'),
+        actions: available.map((lang) {
+          return CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              onChanged(lang);
+            },
+            isDefaultAction: lang.code == selected.code,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                FlagCircle(language: lang, size: 24),
+                const SizedBox(width: 10),
+                Text(
+                  lang.displayName,
+                  style: TextStyle(
+                    fontWeight: lang.code == selected.code
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }).toList(),
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.of(ctx).pop(),
+          isDestructiveAction: false,
+          child: const Text('Cancel'),
+        ),
       ),
     );
-    if (picked != null) onChanged(picked);
   }
 
   @override

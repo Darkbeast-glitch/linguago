@@ -96,26 +96,11 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                 ),
                 const SizedBox(height: 16),
               ],
-              Expanded(
-                child: LayoutBuilder(
-                  builder: (context, constraints) {
-                    return SingleChildScrollView(
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minHeight: constraints.maxHeight,
-                        ),
-                        child: Center(
-                          child: _TranslateCard(
-                            state: state,
-                            viewModel: viewModel,
-                            sourceController: _sourceController,
-                            sourceFocus: _sourceFocus,
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                ),
+              _TranslateCard(
+                state: state,
+                viewModel: viewModel,
+                sourceController: _sourceController,
+                sourceFocus: _sourceFocus,
               ),
               const SizedBox(height: 12),
               const _BetaNotice(),
