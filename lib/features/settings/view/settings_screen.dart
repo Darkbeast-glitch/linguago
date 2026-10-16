@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -5,6 +7,7 @@ import '../../../app/app_router.dart';
 import '../../../app/app_theme.dart';
 import '../../../core/storage/app_preferences.dart';
 import '../../translation/data/models/language.dart';
+import '../../translation/data/models/tts_voice.dart';
 import '../../translation/viewmodel/translation_viewmodel.dart';
 import '../viewmodel/settings_viewmodel.dart';
 
@@ -69,42 +72,54 @@ class SettingsScreen extends ConsumerWidget {
               final selectedVoiceIsAvailable = availableVoices.any(
                 (voice) => voice.id == savedVoiceId,
               );
+
+              void onVoiceChanged(String? voiceId) =>
+                  settingsViewModel.setSpeechVoice(
+                    speechLanguage,
+                    voiceId == null || voiceId.isEmpty ? null : voiceId,
+                  );
+
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    DropdownButtonFormField<String>(
-                      key: ValueKey(
-                        '${speechLanguage.code}:${savedVoiceId ?? ''}',
-                      ),
-                      initialValue: selectedVoiceIsAvailable
-                          ? savedVoiceId
-                          : '',
-                      decoration: const InputDecoration(
-                        labelText: 'Offline voice',
-                      ),
-                      items: [
-                        const DropdownMenuItem(
-                          value: '',
-                          child: Text('Automatic local voice'),
+                    // iOS: native bottom action sheet
+                    if (defaultTargetPlatform == TargetPlatform.iOS)
+                      _IosVoicePicker(
+                        voices: availableVoices,
+                        savedVoiceId:
+                            selectedVoiceIsAvailable ? savedVoiceId : null,
+                        onChanged:
+                            availableVoices.isEmpty ? null : onVoiceChanged,
+                      )
+                    // Android / other: Material dropdown
+                    else
+                      DropdownButtonFormField<String>(
+                        key: ValueKey(
+                          '${speechLanguage.code}:${savedVoiceId ?? ''}',
                         ),
-                        ...availableVoices.map(
-                          (voice) => DropdownMenuItem(
-                            value: voice.id,
-                            child: Text(voice.name),
+                        initialValue:
+                            selectedVoiceIsAvailable ? savedVoiceId : '',
+                        decoration: const InputDecoration(
+                          labelText: 'Offline voice',
+                        ),
+                        items: [
+                          const DropdownMenuItem(
+                            value: '',
+                            child: Text('Automatic local voice'),
                           ),
-                        ),
-                      ],
-                      onChanged: availableVoices.isEmpty
-                          ? null
-                          : (voiceId) => settingsViewModel.setSpeechVoice(
-                              speechLanguage,
-                              voiceId == null || voiceId.isEmpty
-                                  ? null
-                                  : voiceId,
+                          ...availableVoices.map(
+                            (voice) => DropdownMenuItem(
+                              value: voice.id,
+                              child: Text(voice.name),
                             ),
-                    ),
+                          ),
+                        ],
+                        onChanged: availableVoices.isEmpty
+                            ? null
+                            : onVoiceChanged,
+                      ),
                     if (savedVoiceId != null && !selectedVoiceIsAvailable)
                       const Padding(
                         padding: EdgeInsets.only(top: 8),
@@ -173,7 +188,7 @@ class SettingsScreen extends ConsumerWidget {
             title: Text(
               isModelReady
                   ? 'On-device model ready'
-                  : 'Preparing on-device model…',
+                  : 'Preparing on-device model\u2026',
             ),
           ),
           const Divider(),
@@ -199,6 +214,119 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// iOS-native voice picker
+// ─────────────────────────────────────────────────────────────────────────────
+
+/// A tappable row that slides up a [CupertinoActionSheet] on iOS, showing all
+/// available offline voices. Mirrors the native iOS system picker style.
+class _IosVoicePicker extends StatelessWidget {
+  const _IosVoicePicker({
+    required this.voices,
+    required this.savedVoiceId,
+    required this.onChanged,
+  });
+
+  final List<TtsVoice> voices;
+  final String? savedVoiceId;
+  final ValueChanged<String?>? onChanged;
+
+  String get _currentLabel {
+    if (voices.isEmpty) return 'No offline voices available';
+    if (savedVoiceId == null) return 'Automatic local voice';
+    return voices
+        .firstWhere(
+          (v) => v.id == savedVoiceId,
+          orElse: () => voices.first,
+        )
+        .name;
+  }
+
+  Future<void> _show(BuildContext context) async {
+    if (onChanged == null) return;
+
+    await showCupertinoModalPopup<void>(
+      context: context,
+      builder: (ctx) => CupertinoActionSheet(
+        title: const Text('Offline voice'),
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+              onChanged?.call(null);
+            },
+            isDefaultAction: savedVoiceId == null,
+            child: const Text('Automatic local voice'),
+          ),
+          ...voices.map(
+            (voice) => CupertinoActionSheetAction(
+              onPressed: () {
+                Navigator.of(ctx).pop();
+                onChanged?.call(voice.id);
+              },
+              isDefaultAction: voice.id == savedVoiceId,
+              child: Text(voice.name),
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Navigator.of(ctx).pop(),
+          child: const Text('Cancel'),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onChanged == null ? null : () => _show(context),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 12),
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(color: Colors.grey.shade300),
+          ),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Offline voice',
+                    style: TextStyle(fontSize: 12, color: AppColors.textGray),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    _currentLabel,
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: onChanged == null
+                          ? AppColors.textGray
+                          : Colors.black87,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Icon(
+              CupertinoIcons.chevron_up_chevron_down,
+              size: 16,
+              color: onChanged == null
+                  ? AppColors.textGray.withValues(alpha: 0.4)
+                  : AppColors.textGray,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
 
 class _SectionLabel extends StatelessWidget {
   const _SectionLabel(this.text);
