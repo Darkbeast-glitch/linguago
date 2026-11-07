@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../features/expert_class/view/expert_class_dashboard_screen.dart';
+import '../features/expert_class/view/expert_class_language_select_screen.dart';
+import '../features/expert_class/view/lesson_screen.dart';
 import '../features/home/view/home_screen.dart';
 import '../features/model_setup/view/model_setup_screen.dart';
 import '../features/onboarding/view/get_started_screen.dart';
@@ -16,6 +19,9 @@ abstract final class AppRoutes {
   static const translator = '/translator';
   static const settings = '/settings';
   static const privacy = '/privacy';
+  static const expertClass = '/expert-class';
+  static const expertClassDashboard = '/expert-class-dashboard';
+  static const expertLesson = '/expert-lesson';
 }
 
 class AppRouter {
@@ -36,6 +42,16 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case AppRoutes.privacy:
         return MaterialPageRoute(builder: (_) => const PrivacyScreen());
+      case AppRoutes.expertClass:
+        return MaterialPageRoute(
+          builder: (_) => const ExpertClassLanguageSelectScreen(),
+        );
+      case AppRoutes.expertClassDashboard:
+        return MaterialPageRoute(
+          builder: (_) => const ExpertClassDashboardScreen(),
+        );
+      case AppRoutes.expertLesson:
+        return MaterialPageRoute(builder: (_) => const LessonScreen());
       case AppRoutes.getStarted:
       default:
         return MaterialPageRoute(builder: (_) => const GetStartedScreen());

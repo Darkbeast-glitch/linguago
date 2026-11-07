@@ -79,12 +79,12 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
       // Lets the card scroll clear of the keyboard when typing.
       resizeToAvoidBottomInset: true,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           child: Column(
             children: [
               _TopBar(canPop: Navigator.canPop(context)),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               // Keyed off errorMessage rather than the error status: a TTS
               // failure leaves the status at success (the translation is still
               // good and stays on screen) but must still explain that voice
@@ -94,7 +94,7 @@ class _TranslationScreenState extends ConsumerState<TranslationScreen> {
                   message: state.errorMessage!,
                   isCapabilityGap: state.errorIsCapabilityGap,
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 12),
               ],
               _TranslateCard(
                 state: state,
@@ -409,7 +409,7 @@ class _LanguageHalf extends StatelessWidget {
     this.padding = const EdgeInsets.all(20),
   });
 
-  static const double minHeight = 210.0;
+  static const double minHeight = 185.0;
 
   final Language language;
   final ValueChanged<Language> onLanguageChanged;

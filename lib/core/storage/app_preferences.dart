@@ -30,8 +30,8 @@ class AppPreferences {
   static const _kSourceLanguage = 'preferred_source_language';
   static const _kTargetLanguage = 'preferred_target_language';
   static const defaultSpeechRate = 0.45;
-  static const minSpeechRate = 0.25;
-  static const maxSpeechRate = 0.75;
+  static const minSpeechRate = 0.12;
+  static const maxSpeechRate = 0.85;
 
   bool get hasSeenGetStarted => _prefs.getBool(_kHasSeenGetStarted) ?? false;
 
@@ -98,5 +98,110 @@ class AppPreferences {
       ...recentLanguageCodes.where((c) => c != code),
     ].take(maxRecent).toList();
     await _prefs.setStringList(_kRecentLanguages, updated);
+  }
+
+  // ── The Expert Class & Streak Tracking ─────────────────────────────────────
+
+  static const _kExpertLanguageCode = 'expert_target_language_code';
+  static const _kExpertLevel = 'expert_level';
+  static const _kExpertCurrentDay = 'expert_current_day';
+  static const _kExpertCompletedDays = 'expert_completed_days';
+  static const _kStreakCount = 'expert_streak_count';
+  static const _kLongestStreak = 'expert_longest_streak';
+  static const _kLastStreakDate = 'expert_last_streak_date';
+  static const _kExpertActivityDates = 'expert_activity_dates';
+
+  String? get expertLanguageCode => _prefs.getString(_kExpertLanguageCode);
+
+  Future<void> setExpertLanguageCode(String? code) async {
+    if (code == null) {
+      await _prefs.remove(_kExpertLanguageCode);
+    } else {
+      await _prefs.setString(_kExpertLanguageCode, code);
+    }
+  }
+
+  String get expertLevel => _prefs.getString(_kExpertLevel) ?? 'beginner';
+
+  Future<void> setExpertLevel(String level) =>
+      _prefs.setString(_kExpertLevel, level);
+
+  int get expertCurrentDay => (_prefs.getInt(_kExpertCurrentDay) ?? 1).clamp(1, 60);
+
+  Future<void> setExpertCurrentDay(int day) =>
+      _prefs.setInt(_kExpertCurrentDay, day.clamp(1, 60));
+
+  Set<int> get expertCompletedDays {
+    final list = _prefs.getStringList(_kExpertCompletedDays) ?? [];
+    return list.map((e) => int.tryParse(e)).whereType<int>().toSet();
+  }
+
+  Future<void> addExpertCompletedDay(int day) async {
+    final updated = expertCompletedDays..add(day);
+    await _prefs.setStringList(
+      _kExpertCompletedDays,
+      updated.map((e) => e.toString()).toList(),
+    );
+    // If the completed day was the current active day and not 60, bump to next day
+    if (day == expertCurrentDay && day < 60) {
+      await setExpertCurrentDay(day + 1);
+    }
+  }
+
+  int get streakCount => _prefs.getInt(_kStreakCount) ?? 0;
+
+  int get longestStreak => _prefs.getInt(_kLongestStreak) ?? 0;
+
+  String? get lastStreakDate => _prefs.getString(_kLastStreakDate);
+
+  Set<String> get expertActivityDates {
+    final list = _prefs.getStringList(_kExpertActivityDates) ?? [];
+    return list.toSet();
+  }
+
+  Future<void> addExpertActivityDate(String yyyyMmDd) async {
+    final updated = expertActivityDates..add(yyyyMmDd);
+    await _prefs.setStringList(_kExpertActivityDates, updated.toList());
+  }
+
+  bool get isStreakCompletedToday {
+    final today = _formatDate(DateTime.now());
+    return lastStreakDate == today;
+  }
+
+  /// Updates streak upon completing a daily learning session.
+  /// Returns the updated streak count.
+  Future<int> recordDailyActivity() async {
+    final now = DateTime.now();
+    final today = _formatDate(now);
+    final yesterday = _formatDate(now.subtract(const Duration(days: 1)));
+    final last = lastStreakDate;
+
+    int newStreak;
+    if (last == today) {
+      // Already counted today
+      newStreak = streakCount > 0 ? streakCount : 1;
+    } else if (last == yesterday) {
+      // Consecutive day!
+      newStreak = streakCount + 1;
+    } else {
+      // First day or streak broken
+      newStreak = 1;
+    }
+
+    final newLongest = newStreak > longestStreak ? newStreak : longestStreak;
+
+    await _prefs.setInt(_kStreakCount, newStreak);
+    await _prefs.setInt(_kLongestStreak, newLongest);
+    await _prefs.setString(_kLastStreakDate, today);
+    await addExpertActivityDate(today);
+
+    return newStreak;
+  }
+
+  static String _formatDate(DateTime date) {
+    return '${date.year.toString().padLeft(4, '0')}-'
+        '${date.month.toString().padLeft(2, '0')}-'
+        '${date.day.toString().padLeft(2, '0')}';
   }
 }

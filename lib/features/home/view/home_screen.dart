@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/app_router.dart';
 import '../../../core/widgets/flag_circle.dart';
+import '../../expert_class/view/widgets/streak_badge.dart';
+import '../../expert_class/viewmodel/expert_class_viewmodel.dart';
 import '../../translation/data/models/language.dart';
 import '../../translation/viewmodel/translation_viewmodel.dart';
 import 'home_menu_sheet.dart';
@@ -13,6 +15,8 @@ class HomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final expertState = ref.watch(expertClassViewModelProvider);
+
     return Scaffold(
       backgroundColor: const Color(0xFFEEEEEE),
       body: SafeArea(
@@ -27,9 +31,28 @@ class HomeScreen extends ConsumerWidget {
                   icon: Icons.grid_view_rounded,
                   onTap: () => HomeMenuSheet.show(context),
                 ),
-                _CircleIconButton(
-                  icon: Icons.search_rounded,
-                  onTap: () => LanguageSearchSheet.show(context),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (expertState.streakCount > 0) ...[
+                      GestureDetector(
+                        onTap: () => Navigator.of(context).pushNamed(
+                          expertState.hasActiveProfile
+                              ? AppRoutes.expertClassDashboard
+                              : AppRoutes.expertClass,
+                        ),
+                        child: StreakBadge(
+                          streakCount: expertState.streakCount,
+                          isActiveToday: expertState.isStreakActiveToday,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                    ],
+                    _CircleIconButton(
+                      icon: Icons.search_rounded,
+                      onTap: () => LanguageSearchSheet.show(context),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -68,14 +91,26 @@ class HomeScreen extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  // Grayed out Expert Class card
+                  // The Expert Class card
                   Expanded(
                     child: _FeatureCard(
-                      color: const Color(0xFFE0E2E7),
+                      color: const Color(0xFF1E1B4B),
                       label: 'The\nExpert\nClass',
-                      labelColor: const Color(0xFF9CA3AF),
-                      isDisabled: true,
-                      onTap: () {},
+                      labelColor: Colors.white,
+                      badgeText: expertState.streakCount > 0
+                          ? '🔥 ${expertState.streakCount}d'
+                          : '60 Days',
+                      onTap: () {
+                        if (expertState.hasActiveProfile) {
+                          Navigator.of(context).pushNamed(
+                            AppRoutes.expertClassDashboard,
+                          );
+                        } else {
+                          Navigator.of(context).pushNamed(
+                            AppRoutes.expertClass,
+                          );
+                        }
+                      },
                     ),
                   ),
                 ],
@@ -244,6 +279,7 @@ class _FeatureCard extends StatelessWidget {
     required this.labelColor,
     required this.onTap,
     this.isDisabled = false,
+    this.badgeText,
   });
 
   final Color color;
@@ -251,6 +287,7 @@ class _FeatureCard extends StatelessWidget {
   final Color labelColor;
   final VoidCallback onTap;
   final bool isDisabled;
+  final String? badgeText;
 
   @override
   Widget build(BuildContext context) {
@@ -280,6 +317,27 @@ class _FeatureCard extends StatelessWidget {
                 ),
               ),
             ),
+            // Badge text (e.g. streak or days) — bottom-left
+            if (badgeText != null)
+              Positioned(
+                bottom: 18,
+                left: 18,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.18),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    badgeText!,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
             // Arrow / Lock button — bottom-right corner
             Positioned(
               bottom: 14,
